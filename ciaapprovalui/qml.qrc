@@ -24,5 +24,6 @@
         <file>qml/enterprise/EnterpriseListTitleListViewComponent.qml</file>
         <file>qml/enterprise/EnterpriseListPage.qml</file>
         <file>qml/CDoodHeaderImage.qml</file>
+        <file>qml/AuthPage.qml</file>
     </qresource>
 </RCC>

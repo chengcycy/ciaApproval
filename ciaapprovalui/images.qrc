@@ -43,5 +43,9 @@
         <file>res/unselected.png</file>
         <file>res/ic_back@2x.png</file>
         <file>res/moren_icon.png</file>
+        <file>res/echo_normal.png</file>
+        <file>res/echo_pwd.png</file>
+        <file>res/password.png</file>
+        <file>res/id.png</file>
     </qresource>
 </RCC>

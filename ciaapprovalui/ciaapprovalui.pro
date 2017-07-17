@@ -7,7 +7,7 @@
 # This is needed for using syberos-application module
 include(../syberos.pri)
 
-QT += gui qml quick
+QT += gui qml quick network core
 TARGET = ciaapprovalui
 TEMPLATE = app
 
@@ -60,4 +60,5 @@ DISTFILES += \
     qml/enterprise/EnterpriseListTitleListViewComponent.qml \
     qml/enterprise/SelectApprovalUser.qml \
     qml/enterprise/EnterpriseListPage.qml \
-    qml/enterprise/EnterpriseListContentListViewComponent.qml
+    qml/enterprise/EnterpriseListContentListViewComponent.qml \
+    qml/AuthPage.qml
