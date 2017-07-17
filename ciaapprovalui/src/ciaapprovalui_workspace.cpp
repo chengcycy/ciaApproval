@@ -7,7 +7,19 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
 {
     m_view = SYBEROS::SyberosGuiCache::qQuickView();
     QObject::connect(m_view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
-    m_view->setSource(QUrl("qrc:/qml/main.qml"));
+
+    m_pOrgManager = QSharedPointer<OrgManager>(new OrgManager(this));
+    if(!m_pOrgManager.data()){
+        qDebug() << Q_FUNC_INFO << "m_pOrgManager init error !!!";
+    }
+    m_view->engine()->rootContext()->setContextProperty("orgManager", m_pOrgManager.data());
+
+    m_pOrgNavBarManager = QSharedPointer<OrgManagerNavBar>(new OrgManagerNavBar(this));
+    if(!m_pOrgNavBarManager.data()){
+        qDebug() << Q_FUNC_INFO << "m_pOrgNavBarManager init error !!!";
+    }
+    m_view->engine()->rootContext()->setContextProperty("orgNavBarManager", m_pOrgNavBarManager.data());
+
 
     int mfp = 1;
     QVariant fp;
@@ -15,6 +27,7 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     m_view->engine()->rootContext()->setContextProperty("fp",fp);
     m_view->engine()->rootContext()->setContextProperty("gUtill",&mUtills);
 
+    m_view->setSource(QUrl("qrc:/qml/main.qml"));
     m_view->showFullScreen();
 }
 

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sopconfig syberos:versionName="1.0.0" xmlns:syberos="http://schemas.syberos.com/rpm/res/syberos" syberos:versionCode="1" syberos:sopid="com.vrv.ciaapproval" syberos:shareUserId="">
-    <uses-sdk syberos:targetSdkVersion="" syberos:minSdkVersion=""/>
+<sopconfig syberos:versionCode="1" xmlns:syberos="http://schemas.syberos.com/rpm/res/syberos" syberos:sopid="com.vrv.ciaapproval" syberos:shareUserId="" syberos:versionName="1.0.0">
+    <uses-sdk syberos:minSdkVersion="" syberos:targetSdkVersion=""/>
     <application syberos:debuggable="true" syberos:description="Brief introduction of your application here. " syberos:name="ciaApproval" syberos:icon="res/ciaapprovalui.png">
-        <uiapp syberos:launcher="false" syberos:background="" syberos:splash="" syberos:id="ciaapprovalui" syberos:exec="bin/ciaapprovalui" syberos:name="ciaapprovalui" syberos:icon="res/ciaapprovalui.png">
+        <uiapp syberos:launcher="false" syberos:exec="bin/ciaapprovalui" syberos:splash="" syberos:name="ciaapprovalui" syberos:icon="res/ciaapprovalui.png" syberos:id="ciaapprovalui" syberos:background="">
             <doctype syberos:id=""/>
         </uiapp>
     </application>

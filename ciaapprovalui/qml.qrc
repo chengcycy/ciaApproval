@@ -19,5 +19,10 @@
         <file>qml/CDoodInitiatedApprovalPage.qml</file>
         <file>qml/CDoodUndeterminedApprovalPage.qml</file>
         <file>qml/SwipeTab.qml</file>
+        <file>qml/enterprise/SelectApprovalUser.qml</file>
+        <file>qml/enterprise/EnterpriseListContentListViewComponent.qml</file>
+        <file>qml/enterprise/EnterpriseListTitleListViewComponent.qml</file>
+        <file>qml/enterprise/EnterpriseListPage.qml</file>
+        <file>qml/CDoodHeaderImage.qml</file>
     </qresource>
 </RCC>

@@ -38,5 +38,10 @@
         <file>res/approval/xiangji@1.5x.png</file>
         <file>res/approval/xiangji@2x.png</file>
         <file>res/approval/xiangji@3x.png</file>
+        <file>res/Group@2x.png</file>
+        <file>res/selected.png</file>
+        <file>res/unselected.png</file>
+        <file>res/ic_back@2x.png</file>
+        <file>res/moren_icon.png</file>
     </qresource>
 </RCC>

@@ -11,19 +11,23 @@ QT += gui qml quick
 TARGET = ciaapprovalui
 TEMPLATE = app
 
-CONFIG += link_pkgconfig qml_debug
+CONFIG += link_pkgconfig qml_debug c++11
 PKGCONFIG += syberos-application syberos-application-cache
 
 RESOURCES += qml.qrc images.qrc
 
 HEADERS += src/ciaapprovalui_workspace.h \
     src/cutills.h \
-    src/cdoodlistmodel.h
+    src/cdoodlistmodel.h \
+    src/contactdef.h \
+    src/consttype.h \
+    src/orgmanager.h
 
 SOURCES += src/main.cpp \
 		   src/ciaapprovalui_workspace.cpp \
     src/cutills.cpp \
-    src/cdoodlistmodel.cpp
+    src/cdoodlistmodel.cpp \
+    src/orgmanager.cpp
 
 OTHER_FILES += qml/*.qml
 
@@ -52,4 +56,8 @@ DISTFILES += \
     qml/CDoodGeneralApprovalPage.qml \
     qml/CDoodInitiatedApprovalPage.qml \
     qml/CDoodUndeterminedApprovalPage.qml \
-    qml/SwipeTab.qml
+    qml/SwipeTab.qml \
+    qml/enterprise/EnterpriseListTitleListViewComponent.qml \
+    qml/enterprise/SelectApprovalUser.qml \
+    qml/enterprise/EnterpriseListPage.qml \
+    qml/enterprise/EnterpriseListContentListViewComponent.qml

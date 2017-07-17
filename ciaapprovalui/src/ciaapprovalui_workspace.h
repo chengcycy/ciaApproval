@@ -10,6 +10,8 @@
 #include <cworkspace.h>
 
 #include "cutills.h"
+#include "consttype.h"
+#include "orgmanager.h"
 
 using namespace SYBEROS;
 
@@ -20,6 +22,8 @@ class ciaapprovalui_Workspace : public CWorkspace
 private:
     QQuickView *m_view;
     CUtills    mUtills;
+    QSharedPointer<OrgManagerNavBar> m_pOrgNavBarManager;
+    QSharedPointer<OrgManager> m_pOrgManager;
 public:
     ciaapprovalui_Workspace();
 
