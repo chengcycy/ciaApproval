@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sopconfig syberos:versionCode="1" xmlns:syberos="http://schemas.syberos.com/rpm/res/syberos" syberos:sopid="com.vrv.ciaapproval" syberos:shareUserId="" syberos:versionName="1.0.0">
     <uses-sdk syberos:minSdkVersion="" syberos:targetSdkVersion=""/>
-    <application syberos:debuggable="true" syberos:description="Brief introduction of your application here. " syberos:name="ciaApproval" syberos:icon="res/ciaapprovalui.png">
-        <uiapp syberos:launcher="false" syberos:exec="bin/ciaapprovalui" syberos:splash="" syberos:name="ciaapprovalui" syberos:icon="res/ciaapprovalui.png" syberos:id="ciaapprovalui" syberos:background="">
+    <application syberos:debuggable="true" syberos:description="审批 for application here. " syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png">
+        <uiapp syberos:launcher="true" syberos:exec="bin/ciaapprovalui" syberos:splash="" syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png" syberos:id="ciaapprovalui" syberos:background="">
             <doctype syberos:id=""/>
         </uiapp>
     </application>
