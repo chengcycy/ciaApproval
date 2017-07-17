@@ -33,3 +33,23 @@ res.files = res
 res.path = $$INSTALL_DIR/
 
 INSTALLS += target res
+
+DISTFILES += \
+    qml/CDoodApprovalRequest.js \
+    qml/ApprovalSwipeTabview.qml \
+    qml/CDoodApplicationsPage.qml \
+    qml/CDoodApplicationStorePage.qml \
+    qml/CDoodApprovalDetailsPage.qml \
+    qml/CDoodApprovalDocumentListPage.qml \
+    qml/CDoodApprovalListView.qml \
+    qml/CDoodApprovalPage.qml \
+    qml/CDoodApprovalPassPage.qml \
+    qml/CDoodApprovalRejectPage.qml \
+    qml/CDoodApprovalTranspondPage.qml \
+    qml/CDoodBusinessTripApproval.qml \
+    qml/CDoodDocumentApprovalPage.qml \
+    qml/CDoodDocumentDetailPage.qml \
+    qml/CDoodGeneralApprovalPage.qml \
+    qml/CDoodInitiatedApprovalPage.qml \
+    qml/CDoodUndeterminedApprovalPage.qml \
+    qml/SwipeTab.qml

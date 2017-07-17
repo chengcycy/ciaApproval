@@ -1,5 +1,23 @@
 <RCC>
     <qresource prefix="/">
         <file>qml/main.qml</file>
+        <file>qml/ApprovalSwipeTabview.qml</file>
+        <file>qml/CDoodApplicationsPage.qml</file>
+        <file>qml/CDoodApplicationStorePage.qml</file>
+        <file>qml/CDoodApprovalDetailsPage.qml</file>
+        <file>qml/CDoodApprovalDocumentListPage.qml</file>
+        <file>qml/CDoodApprovalListView.qml</file>
+        <file>qml/CDoodApprovalPage.qml</file>
+        <file>qml/CDoodApprovalPassPage.qml</file>
+        <file>qml/CDoodApprovalRejectPage.qml</file>
+        <file>qml/CDoodApprovalRequest.js</file>
+        <file>qml/CDoodApprovalTranspondPage.qml</file>
+        <file>qml/CDoodBusinessTripApproval.qml</file>
+        <file>qml/CDoodDocumentApprovalPage.qml</file>
+        <file>qml/CDoodDocumentDetailPage.qml</file>
+        <file>qml/CDoodGeneralApprovalPage.qml</file>
+        <file>qml/CDoodInitiatedApprovalPage.qml</file>
+        <file>qml/CDoodUndeterminedApprovalPage.qml</file>
+        <file>qml/SwipeTab.qml</file>
     </qresource>
 </RCC>

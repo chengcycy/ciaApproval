@@ -1,5 +1,42 @@
 <RCC>
     <qresource prefix="/">
         <file>res/ciaapprovalui.png</file>
+        <file>res/approval/btn_pick_focus.png</file>
+        <file>res/approval/btn_pick_normal.png</file>
+        <file>res/approval/Corner_Confidential.png</file>
+        <file>res/approval/down Corner_applicant.png</file>
+        <file>res/approval/down Corner_pass.png</file>
+        <file>res/approval/down Corner_Reject.png</file>
+        <file>res/approval/down Corner_unaudited.png</file>
+        <file>res/approval/ic_add.png</file>
+        <file>res/approval/ic_add to.png</file>
+        <file>res/approval/ic_back.png</file>
+        <file>res/approval/ic_cloud_doc.png</file>
+        <file>res/approval/ic_cloud_exe.png</file>
+        <file>res/approval/ic_cloud_pdf.png</file>
+        <file>res/approval/ic_list_Delete Reveal.png</file>
+        <file>res/approval/ic_list_nor.png</file>
+        <file>res/approval/ic_list_sele.png</file>
+        <file>res/approval/ic_search_nor.png</file>
+        <file>res/approval/ic_works_archived.png</file>
+        <file>res/approval/ic_works_examination_absence.png</file>
+        <file>res/approval/ic_works_examination_business trip.png</file>
+        <file>res/approval/ic_works_examination_carbon copy.png</file>
+        <file>res/approval/ic_works_examination_currency.png</file>
+        <file>res/approval/ic_works_examination_expense.png</file>
+        <file>res/approval/ic_works_examination_go out.png</file>
+        <file>res/approval/ic_works_examination_handle.png</file>
+        <file>res/approval/ic_works_examination_originate.png</file>
+        <file>res/approval/ic_works_examination_promotion.png</file>
+        <file>res/approval/ic_works_examination_purchase.png</file>
+        <file>res/approval/ic_works_examination_Rest.png</file>
+        <file>res/approval/ic_works_Shape.png</file>
+        <file>res/approval/up Corner_pass.png</file>
+        <file>res/approval/up Corner_reject.png</file>
+        <file>res/approval/up Corner_unaudited.png</file>
+        <file>res/approval/xiangji.png</file>
+        <file>res/approval/xiangji@1.5x.png</file>
+        <file>res/approval/xiangji@2x.png</file>
+        <file>res/approval/xiangji@3x.png</file>
     </qresource>
 </RCC>
