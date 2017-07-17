@@ -1,0 +1,53 @@
+{
+  "demoContacts":[],
+  "demoOrg":[
+    {
+      "userName": "中国科学院",
+      "userID": 1,
+      "orgList": [
+        {"orgName": "183", "orgID": 183},
+        {"orgName": "185", "orgID": 185}
+      ],
+      "staffList": []
+    },
+    {
+      "userName": "183",
+      "userID": 183,
+      "orgList": [
+        {"orgName": "信工所", "orgID": 2},
+        {"orgName": "某局", "orgID": 3}
+      ],
+      "staffList": []
+    },
+    {
+      "userName": "185",
+      "userID": 185,
+      "orgList": [
+        {"orgName": "信工所", "orgID": 2}
+      ],
+      "staffList": []
+    },
+    {
+      "userName": "信工所",
+      "userID": 2,
+      "orgList": [],
+      "staffList": [
+        {"userID": 12717229742, "userName": "江丹", "userPhotoUrl": ""},
+        {"userID": 12717229743, "userName": "胡亚辉", "userPhotoUrl": ""},
+        {"userID": 12717229744, "userName": "宋晨", "userPhotoUrl": ""},
+        {"userID": 12717229745, "userName": "王利明", "userPhotoUrl": ""},
+        {"userID": 12717229741, "userName": "徐震", "userPhotoUrl": ""},
+        {"userID": 12717229746, "userName": "李宏佳", "userPhotoUrl": ""}
+      ]
+    },
+    {
+      "userName": "某局",
+      "userID": 3,
+      "orgList": [],
+      "staffList": [
+        {"userID": 12700452530, "userName": "甲", "userPhotoUrl": ""},
+        {"userID": 12700452531, "userName": "乙", "userPhotoUrl": ""}
+      ]
+    }
+  ]
+}
