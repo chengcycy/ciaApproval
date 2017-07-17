@@ -2,6 +2,8 @@
 #include <QDebug>
 #include <QQmlContext>
 #include <QFile>
+#include <csystempackagemanager.h>
+
 
 QString ciaapprovalui_Workspace::myUserId()
 {
@@ -14,6 +16,21 @@ QString ciaapprovalui_Workspace::myUserId()
 ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     : CWorkspace()
 {
+
+    bool insatllLinkDood = false;
+    CSystemPackageManager pkg;
+    QList<QSharedPointer<CPackageInfo> > list = pkg.packageInfoList();
+    for(auto i :list){
+       if(i->sopid() == "com.vrv.linkDood"){
+           insatllLinkDood = true;
+           break;
+       }
+    }
+    if(!insatllLinkDood){
+        QFile file(CONFIG_FILE);
+        file.remove();
+    }
+
     m_view = SYBEROS::SyberosGuiCache::qQuickView();
     QObject::connect(m_view->engine(), SIGNAL(quit()), qApp, SLOT(quit()));
 

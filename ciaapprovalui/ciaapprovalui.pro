@@ -13,6 +13,8 @@ TEMPLATE = app
 
 CONFIG += link_pkgconfig qml_debug c++11
 PKGCONFIG += syberos-application syberos-application-cache
+PKGCONFIG += syberos-qt
+PKGCONFIG += syberos-qt-system
 
 RESOURCES += qml.qrc images.qrc
 
