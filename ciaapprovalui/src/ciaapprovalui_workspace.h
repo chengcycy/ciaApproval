@@ -8,6 +8,7 @@
 #include <SyberosGuiCache>
 #include <cgui_application.h>
 #include <cworkspace.h>
+#include <QSettings>
 
 #include "cutills.h"
 #include "consttype.h"
@@ -18,13 +19,14 @@ using namespace SYBEROS;
 class ciaapprovalui_Workspace : public CWorkspace
 {
     Q_OBJECT
-
 private:
     QQuickView *m_view;
     CUtills    mUtills;
     QSharedPointer<OrgManagerNavBar> m_pOrgNavBarManager;
     QSharedPointer<OrgManager> m_pOrgManager;
 public:
+    Q_INVOKABLE QString myUserId();
+
     ciaapprovalui_Workspace();
 
     // 应用启动结束时，回调此函数。根据传入的option，应用可以区分启动的方式。

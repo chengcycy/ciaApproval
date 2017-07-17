@@ -1,6 +1,15 @@
 #include "ciaapprovalui_workspace.h"
 #include <QDebug>
 #include <QQmlContext>
+#include <QFile>
+
+QString ciaapprovalui_Workspace::myUserId()
+{
+    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
+    QString myUserId = settings.value("myId","").toString();
+    qDebug()<<Q_FUNC_INFO<<"myUserId:"<<myUserId;
+    return myUserId;
+}
 
 ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     : CWorkspace()
@@ -26,9 +35,12 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     fp.setValue(mfp);
     m_view->engine()->rootContext()->setContextProperty("fp",fp);
     m_view->engine()->rootContext()->setContextProperty("gUtill",&mUtills);
+    m_view->engine()->rootContext()->setContextProperty("mainApp",this);
 
     m_view->setSource(QUrl("qrc:/qml/main.qml"));
     m_view->showFullScreen();
+
+    myUserId();
 }
 
 void ciaapprovalui_Workspace::onLaunchComplete(Option option, const QStringList& params)
