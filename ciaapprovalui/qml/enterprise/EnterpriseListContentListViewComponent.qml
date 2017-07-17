@@ -94,6 +94,8 @@ Rectangle{
                         visible: !model.modelData.isDepart
                         checked: model.modelData.isSel
                         enabled: false
+//                        normalColor: "blue"
+                        checkedColor: "blue"
 
                         anchors.verticalCenter: parent.verticalCenter
                         anchors.right: parent.right
