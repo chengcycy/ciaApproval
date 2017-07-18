@@ -12,6 +12,7 @@ CPageStackWindow {
             text: '登录接口'
             onClicked: {
                 ApprovalRequest.getJSONFile(onGetJSONFile)
+                //////////////////////////////////////////////////////
             }
         }
         CButton {
