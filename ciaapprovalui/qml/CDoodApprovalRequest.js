@@ -40,7 +40,8 @@ function addNewApprovalEvent(type, createUser, approver, content, attachment, ca
             console.log(httpRequest.getAllResponseHeaders ());
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
-        } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+        }
+        else if (httpRequest.readyState === XMLHttpRequest.DONE) {
             if (callback) {
                 callback(httpRequest.responseText)
             }

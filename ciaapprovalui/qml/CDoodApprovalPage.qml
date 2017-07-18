@@ -18,7 +18,7 @@ CPage{
 
 //        approvalManager.undeterminedApprovalModel.reset();
 //        approvalManager.getUndetermindApprovalList(userProfileManager.id, 0)
-        ApprovalRequest.selectNeedApprovalEvent(userProfileManager.id, 0,
+        ApprovalRequest.selectNeedApprovalEvent(currentID, 0,
                                                 onGetUndetermindListCount)
     }
 //    onStatusChanged: {

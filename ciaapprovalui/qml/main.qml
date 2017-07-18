@@ -7,11 +7,18 @@ CPageStackWindow {
         width:parent.width
         height:parent.height
         CButton {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: approvalBtn.top
+            text: '登录接口'
+            onClicked: {
+                ApprovalRequest.getJSONFile(onGetJSONFile)
+            }
+        }
+        CButton {
             id: approvalBtn
             anchors.centerIn: parent
             text: '审批'
             onClicked: {
-                ApprovalRequest.getJSONFile(onGetJSONFile)
                 pageStack.push(Qt.resolvedUrl('CDoodApprovalPage.qml'))
             }
         }
@@ -34,6 +41,13 @@ CPageStackWindow {
     }
 
     function onGetJSONFile(ret) {
-        console.log('Danger test:' + JSON.stringify(ret))
+        console.log('Danger test:' + ret)
+        var obj = JSON.parse(ret)
+        console.log('Danger test:' + obj.staffList[0].userID)
+        currentID = obj.staffList[0].userID
+    }
+
+    function onGetApprovalList(ret) {
+        console.log('Danger test:' + ret)
     }
 }
