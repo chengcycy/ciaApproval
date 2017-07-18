@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
 import 'CDoodApprovalRequest.js' as ApprovalRequest
-import "../"
 
 CPage{
     id: undeterminedApprovalPage
@@ -25,9 +24,7 @@ CPage{
 //                determinedList.loading = true
 //                approvalManager.determinedApprovalModel.reset();
 //            }
-//            approvalManager.getUndetermindApprovalList(userProfileManager.id,
-//                                                       myTabView.currentIndex)
-            ApprovalRequest.selectNeedApprovalEvent(userProfileManager.id,
+            ApprovalRequest.selectNeedApprovalEvent(currentID,
                                                     myTabView.currentIndex,
                                                     onGetUndetermindList)
         }
@@ -89,7 +86,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * undeterminedApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * undeterminedApprovalPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -150,7 +147,7 @@ CPage{
                     searchLabelEnabled: true
                     searchLabelLeftMargin: gUtill.dpW2(130 * undeterminedApprovalPage.scale)
                     searchLabelRightMargin: 0
-                    searchLabelIcon: 'qrc:/res/newUi/approval/ic_search_nor.png'
+                    searchLabelIcon: 'qrc:/res/approval/ic_search_nor.png'
                     placeholderText: qsTr("搜索")
                     placeholderTextItem.color: '#475883'
                     placeholderTextItem.font.family: 'PingFangSC-Regular'
@@ -193,11 +190,11 @@ CPage{
 
                     onTabClick: {
                         if (myTabView.currentIndex === 0) {
-                            approvalManager.undeterminedApprovalModel.reset();
+                            //approvalManager.undeterminedApprovalModel.reset();
                             undeterminedList.loading = true
                         }
                         else if (myTabView.currentIndex === 1) {
-                            approvalManager.determinedApprovalModel.reset();
+                            //approvalManager.determinedApprovalModel.reset();
                             determinedList.loading = true
                         }
                         approvalManager.getUndetermindApprovalList(userProfileManager.id, myTabView.currentIndex)
@@ -205,9 +202,9 @@ CPage{
                 }
 
                 CTab {
-                    title: approvalManager.undeterminedCount === 0
+                    title: undeterminedApprovalModel.count === 0
                            ? qsTr("待我审批")
-                           : qsTr("待我审批（" + approvalManager.undeterminedCount + "）")
+                           : qsTr("待我审批（" + undeterminedApprovalModel.count + "）")
                     CDoodApprovalListView {
                         id: undeterminedList
                         anchors.fill: parent
@@ -223,7 +220,7 @@ CPage{
                     CDoodApprovalListView {
                         id: determinedList
                         anchors.fill: parent
-                        model: approvalManager.determinedApprovalModel
+                        model: determinedApprovalModel
                         listType: 4
                     }
                 }
@@ -233,6 +230,18 @@ CPage{
 
     ListModel {
         id: undeterminedApprovalModel
+        ListElement {
+            approvalID: 1
+            targetName: '1'
+            portrait: '1'
+            approvalType: 1
+            approvalStatus: 1
+            time: '1'
+        }
+    }
+
+    ListModel {
+        id: determinedApprovalModel
         ListElement {
             approvalID: 1
             targetName: '1'

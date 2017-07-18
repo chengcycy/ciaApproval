@@ -20,12 +20,16 @@ class ciaapprovalui_Workspace : public CWorkspace
 {
     Q_OBJECT
     Q_PROPERTY(QString currentID READ currentID WRITE setCurrentID NOTIFY currentIDChanged)
+    Q_PROPERTY(QString currentName READ currentName WRITE setCurrentName NOTIFY currentNameChanged)
+
 private:
     QQuickView *m_view;
     CUtills    mUtills;
     QSharedPointer<OrgManagerNavBar> m_pOrgNavBarManager;
     QSharedPointer<OrgManager> m_pOrgManager;
     QString    m_currentID;
+    QString    m_currentName;
+
 public:
     Q_INVOKABLE QString myUserId();
 
@@ -36,8 +40,12 @@ public:
 
     QString currentID() const;
     void setCurrentID(const QString currentID);
+    QString currentName() const;
+    void setCurrentName(const QString currentName);
+
 signals:
     void currentIDChanged();
+    void currentNameChanged();
 };
 
 

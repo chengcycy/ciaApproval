@@ -47,5 +47,7 @@
         <file>res/echo_pwd.png</file>
         <file>res/password.png</file>
         <file>res/id.png</file>
+        <file>res/checked.png</file>
+        <file>res/ic_next_more@1.5x.png</file>
     </qresource>
 </RCC>

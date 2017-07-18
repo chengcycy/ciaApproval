@@ -73,7 +73,7 @@ Item {
             sourceSize: Qt.size(src.width,src.height)
             asynchronous: true
             cache: true
-            source:iconSource
+            source: iconSource
 
             onStatusChanged: {
                 if (src.status === Image.Error || src.status === Image.Null) {

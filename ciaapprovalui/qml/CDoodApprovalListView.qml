@@ -17,17 +17,17 @@ Item {
 //        approvalListView.loading = true
 //    }
 
-    Connections {
-        target: approvalManager
-        onGetApprovalListResult: {
-            if (type === listType) {
-                approvalListView.loading = false
-                if(!result) {
-                    gToast.requestToast(qsTr("获取失败"), "", "")
-                }
-            }
-        }
-    }
+//    Connections {
+//        target: approvalManager
+//        onGetApprovalListResult: {
+//            if (type === listType) {
+//                approvalListView.loading = false
+//                if(!result) {
+//                    gToast.requestToast(qsTr("获取失败"), "", "")
+//                }
+//            }
+//        }
+//    }
 
     onLoadingChanged: {
         if (loading) {
@@ -220,13 +220,13 @@ Item {
 
     function getStatusFlagIcon(type) {
         if(type === -1){
-            return "qrc:/res/newUi/approval/up Corner_reject.png";
+            return "qrc:/res/approval/up Corner_reject.png";
         }
         else if(type === 2) {
-            return "qrc:/res/newUi/approval/up Corner_pass.png";
+            return "qrc:/res/approval/up Corner_pass.png";
         }
         else {
-            return "qrc:/res/newUi/approval/up Corner_unaudited.png";
+            return "qrc:/res/approval/up Corner_unaudited.png";
         }
     }
 }

@@ -9,6 +9,7 @@ CPageStackWindow {
         CButton {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: approvalBtn.top
+            anchors.bottomMargin: 30
             text: '登录接口'
             onClicked: {
                 ApprovalRequest.getJSONFile(onGetJSONFile)
@@ -41,13 +42,9 @@ CPageStackWindow {
     }
 
     function onGetJSONFile(ret) {
-        console.log('Danger test:' + ret)
         var obj = JSON.parse(ret)
         console.log('Danger test:' + obj.staffList[0].userID)
-        currentID = obj.staffList[0].userID
-    }
-
-    function onGetApprovalList(ret) {
-        console.log('Danger test:' + ret)
+        mainApp.currentID = obj.staffList[0].userID
+        mainApp.currentName = obj.staffList[0].userName
     }
 }

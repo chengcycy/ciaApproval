@@ -46,9 +46,6 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     }
     m_view->engine()->rootContext()->setContextProperty("orgNavBarManager", m_pOrgNavBarManager.data());
 
-    m_view->engine()->rootContext()->setContextProperty("currentID", m_currentID);
-
-
     int mfp = 1;
     QVariant fp;
     fp.setValue(mfp);
@@ -88,9 +85,23 @@ QString ciaapprovalui_Workspace::currentID() const
 
 void ciaapprovalui_Workspace::setCurrentID(const QString currentID)
 {
+    qDebug() << "ciaapprovalui_Workspace::setCurrentID" << currentID;
     if (m_currentID != currentID) {
         m_currentID = currentID;
         emit currentIDChanged();
+    }
+}
+
+QString ciaapprovalui_Workspace::currentName() const
+{
+    return m_currentName;
+}
+
+void ciaapprovalui_Workspace::setCurrentName(const QString currentName)
+{
+    if (m_currentName != currentName) {
+        m_currentName = currentName;
+        emit currentNameChanged();
     }
 }
 

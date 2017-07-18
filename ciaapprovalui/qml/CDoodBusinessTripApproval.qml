@@ -425,12 +425,6 @@ CPage{
                             content.end_date = endTimeButton.rigthText
                             content.pos_change_to = siteInputTextArea.text
                             content.outReaSon = businessTripReasonContentTextArea.text
-//                            approvalManager.sendApproval(8,
-//                                                         JSON.stringify(content),
-//                                                         userProfileManager.id,
-//                                                         userProfileManager.name,
-//                                                         userProfileManager.thumbAvatar);
-
                             var createUser = {}
                             createUser.userID = userProfileManager.id
                             createUser.userName = userProfileManager.name

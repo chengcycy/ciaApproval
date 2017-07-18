@@ -1,12 +1,16 @@
 ﻿import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../' as Com
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: generalApprovalPage
 
     property real scale: 1.92
     property int approvalType: 0
+    property string selectedUserID: ''
+    property string selectedName: ''
+    property string selectedPortrait: ''
+    property alias submitButtonEnabled: submitButton.enabled
     property var typeList: [qsTr("通用"),qsTr("报销"),qsTr("请假"),qsTr("出差"),qsTr("外出"),qsTr("采购"),qsTr("转正")/*,qsTr("调休")*/]
 
     statusBarHoldEnabled: false
@@ -17,29 +21,26 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
-        approvalManager.selectedUserID = ''
-        approvalManager.selectedName = ''
-        approvalManager.selectedPortrait = ''
-        approvalManager.approvalAttachmentModel.reset()
+//        approvalManager.approvalAttachmentModel.reset()
     }
 
-    Connections {
-        target: approvalManager
-        onSendResult:{
-            indicator.visible = false
-            if (result == "1")
-            {
-                gToast.requestToast("审批已提交","","");
-                approvalManager.selectedUserID = ''
-                approvalManager.selectedName = ''
-                approvalManager.selectedPortrait = ''
-                pageStack.pop()
-            }
-            else {
-                gToast.requestToast("发送失败","","");
-            }
-        }
-    }
+//    Connections {
+//        target: approvalManager
+//        onSendResult:{
+//            indicator.visible = false
+//            if (result == "1")
+//            {
+//                gToast.requestToast("审批已提交","","");
+//                approvalManager.selectedUserID = ''
+//                approvalManager.selectedName = ''
+//                approvalManager.selectedPortrait = ''
+//                pageStack.pop()
+//            }
+//            else {
+//                gToast.requestToast("发送失败","","");
+//            }
+//        }
+//    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -97,7 +98,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * generalApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * generalApprovalPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -131,7 +132,7 @@ CPage{
                 }
             }
 
-            Com.UserProfileButton {
+            UserProfileButton {
                 id: addTypeButton
 
                 width: parent.width
@@ -269,7 +270,7 @@ CPage{
                         rightMargin: 20
                         verticalCenter: imageTipText.verticalCenter
                     }
-                    source: "qrc:/res/newUi/approval/xiangji@2x.png"
+                    source: "qrc:/res/approval/xiangji@2x.png"
 
                     MouseArea {
                         id: addImageArea
@@ -310,7 +311,7 @@ CPage{
                                 height: gUtill.dpH2(25 * generalApprovalPage.scale)
                                 anchors.top: parent.top
                                 anchors.right: parent.right
-                                source: 'qrc:/res/newUi/approval/ic_list_Delete Reveal.png'
+                                source: 'qrc:/res/approval/ic_list_Delete Reveal.png'
                                 //fillMode:
 
                                 MouseArea {
@@ -362,7 +363,7 @@ CPage{
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                Com.CDoodHeaderImage {
+                CDoodHeaderImage {
                     id: addApproverIcon
 
                     width: gUtill.dpW2(45 * generalApprovalPage.scale)
@@ -374,15 +375,22 @@ CPage{
                         leftMargin: gUtill.dpW2(15 * generalApprovalPage.scale)
                     }
 
-                    iconSource: approvalManager.selectedUserID ==='' ?
-                                    setIcon('1', 'qrc:/res/newUi/approval/ic_add.png') :
-                                    setIcon('1', approvalManager.selectedPortrait)
+                    iconSource: generalApprovalPage.selectedUserID ===''
+                                ? setIcon('1', 'qrc:/res/approval/ic_add.png')
+                                : setIcon('1', generalApprovalPage.selectedPortrait)
 
                     MouseArea {
                         id: mouseareaAddApprover
 
                         anchors.fill: parent
-                        onClicked: pageStack.push(Qt.resolvedUrl('../group/GroupAddMainPage.qml'), {isApproval: true});
+                        onClicked: {
+                            var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                            component.callback.connect(function(obj){
+                                console.log("id:"+obj.id+',name:'+obj.name);
+                                generalApprovalPage.selectedUserID = obj.id;
+                                generalApprovalPage.selectedName = obj.name;
+                            });
+                        }
                     }
                 }
 
@@ -400,8 +408,7 @@ CPage{
                 anchors.bottom: parent.bottom
                 color: enabled ? '#577EDD' : '#A2BCE8'
                 enabled: contextTextArea.length > 0
-                         && approvalManager.selectedUserID !== ''
-                         && !indicator.visible
+                         && generalApprovalPage.selectedUserID !== ''
 
                 Text {
                     id: submitText
@@ -420,12 +427,21 @@ CPage{
                     anchors.fill: parent
                     onClicked: {
                         if (submitButton.enabled) {
-                            approvalManager.sendApproval(approvalType,
-                                                         approvalDescriptionContent.text,
-                                                         userProfileManager.id,
-                                                         userProfileManager.name,
-                                                         userProfileManager.thumbAvatar);
+                            console.log('send user:' + mainApp.currentID)
+                            console.log('send name:' + mainApp.currentName)
+                            var createUser = {}
+                            createUser.userID = mainApp.currentID
+                            createUser.userName = mainApp.currentName
+                            createUser.userPhotoUrl = ''
+                            var approver = {}
+                            approver.userID = selectedUserID
+                            approver.userName = selectedName
+                            approver.userPhotoUrl = selectedPortrait
+                            ApprovalRequest.addNewApprovalEvent(approvalType,
+                                createUser, approver, approvalDescriptionContent.text, [],
+                                onSendResult)
                             indicator.visible = true
+                            submitButtonEnabled = false
                         }
                     }
                 }
@@ -439,7 +455,7 @@ CPage{
         }
     }
 
-    Com.CDoodListDialog{
+    CDoodListDialog{
         id: typeListDialog
 
         titleText: qsTr("审批类型")
@@ -456,5 +472,21 @@ CPage{
         acceptedButtonText: '<font color=\"#0076FF\">确认返回</font>'
         rejectButtonText: '<font color=\"#0076FF\">暂不返回</font>'
         onAccepted: pageStack.pop()
+    }
+
+    function onSendResult(ret) {
+        indicator.visible = false
+        submitButtonEnabled = true
+        var obj = JSON.parse(ret)
+        if (obj.code === 1) {
+            gToast.requestToast("审批已提交","","");
+            selectedUserID = ''
+            selectedName = ''
+            selectedPortrait = ''
+            pageStack.pop()
+        }
+        else {
+            gToast.requestToast("发送失败","","");
+        }
     }
 }

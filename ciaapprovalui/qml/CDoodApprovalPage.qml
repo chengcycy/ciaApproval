@@ -1,7 +1,6 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
 import 'CDoodApprovalRequest.js' as ApprovalRequest
-import "../"
 
 CPage{
     id: approvalPage
@@ -16,8 +15,6 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
-//        approvalManager.undeterminedApprovalModel.reset();
-//        approvalManager.getUndetermindApprovalList(userProfileManager.id, 0)
         ApprovalRequest.selectNeedApprovalEvent(currentID, 0,
                                                 onGetUndetermindListCount)
     }
