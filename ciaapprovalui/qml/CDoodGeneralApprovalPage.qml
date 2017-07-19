@@ -314,7 +314,7 @@ CPage{
                 id: addApproverArea
 
                 width: parent.width
-                height: gUtill.dpH2(100 * generalApprovalPage.scale)
+                height: gUtill.dpH2(120 * generalApprovalPage.scale)
                 anchors.top: imagesArea.bottom
                 anchors.topMargin: gUtill.dpH2(10 * generalApprovalPage.scale)
 
@@ -381,7 +381,23 @@ CPage{
                         }
                     }
                 }
+                Text {
+                    id: addApproverName
 
+                    height: gUtill.dpH2(22 * generalApprovalPage.scale)
+                    anchors{
+                        left: parent.left
+                        leftMargin: gUtill.dpW2(12.5 * generalApprovalPage.scale)
+                        top: addApproverIcon.bottom
+                        topMargin: gUtill.dpH2(6 * generalApprovalPage.scale)
+                    }
+
+                    text: generalApprovalPage.selectedName
+                    font.family: 'PingFangSC-Regular'
+                    font.pixelSize: gUtill.dpH2(16 * generalApprovalPage.scale)
+                    color: '#C7C7CC'
+                    verticalAlignment: Text.AlignVCenter
+                }
                 CLine {
                     anchors.bottom: parent.bottom
                     color: '#FFDDDFEB'

@@ -309,7 +309,7 @@ CPage{
                 id: addApproverArea
 
                 width: parent.width
-                height: gUtill.dpH2(100 * businessTripApprovalPage.scale)
+                height: gUtill.dpH2(120 * businessTripApprovalPage.scale)
                 anchors.top: reasonTextArea.bottom
                 anchors.topMargin: gUtill.dpH2(10 * businessTripApprovalPage.scale)
 
@@ -376,7 +376,23 @@ CPage{
                         }
                     }
                 }
+                Text {
+                    id: addApproverName
 
+                    height: gUtill.dpH2(22 * businessTripApprovalPage.scale)
+                    anchors{
+                        left: parent.left
+                        leftMargin: gUtill.dpW2(12.5 * businessTripApprovalPage.scale)
+                        top: addApproverIcon.bottom
+                        topMargin: gUtill.dpH2(6 * businessTripApprovalPage.scale)
+                    }
+
+                    text: selectedName
+                    font.family: 'PingFangSC-Regular'
+                    font.pixelSize: gUtill.dpH2(16 * businessTripApprovalPage.scale)
+                    color: '#C7C7CC'
+                    verticalAlignment: Text.AlignVCenter
+                }
                 CLine {
                     anchors.bottom: parent.bottom
                     color: '#FFDDDFEB'
