@@ -19,23 +19,23 @@ CPage{
         gScreenInfo.setStatusBarStyle("transwhite");
     }
 
-//    Connections {
-//        target: approvalManager
-//        onSendResult:{
-//            if (result == "1")
-//            {
-//                gToast.requestToast("审批已提交","","");
-//                approvalManager.selectedUserID = ''
-//                approvalManager.selectedName = ''
-//                approvalManager.selectedPortrait = ''
-//                pageStack.pop()
-//            }
-//            else {
-//                gToast.requestToast("发送失败","","");
-//            }
-//            indicator.visible = false
-//        }
-//    }
+    //    Connections {
+    //        target: approvalManager
+    //        onSendResult:{
+    //            if (result == "1")
+    //            {
+    //                gToast.requestToast("审批已提交","","");
+    //                approvalManager.selectedUserID = ''
+    //                approvalManager.selectedName = ''
+    //                approvalManager.selectedPortrait = ''
+    //                pageStack.pop()
+    //            }
+    //            else {
+    //                gToast.requestToast("发送失败","","");
+    //            }
+    //            indicator.visible = false
+    //        }
+    //    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -276,7 +276,7 @@ CPage{
                 id: addApproverArea
 
                 width: parent.width
-                height: gUtill.dpH2(100 * documentApprovalPage.scale)
+                height: gUtill.dpH2(120 * documentApprovalPage.scale)
                 anchors.top: contextTextArea.bottom
                 anchors.topMargin: gUtill.dpH2(10 * documentApprovalPage.scale)
 
@@ -335,7 +335,23 @@ CPage{
                         }
                     }
                 }
+                Text {
+                    id: addApproverName
 
+                    height: gUtill.dpH2(22 * documentApprovalPage.scale)
+                    anchors{
+                        left: parent.left
+                        leftMargin: gUtill.dpW2(12.5 * documentApprovalPage.scale)
+                        top: addApproverIcon.bottom
+                        topMargin: gUtill.dpH2(6 * documentApprovalPage.scale)
+                    }
+
+                    text: selectedName
+                    font.family: 'PingFangSC-Regular'
+                    font.pixelSize: gUtill.dpH2(16 * documentApprovalPage.scale)
+                    color: '#C7C7CC'
+                    verticalAlignment: Text.AlignVCenter
+                }
                 CLine {
                     anchors.bottom: parent.bottom
                     color: '#FFDDDFEB'
