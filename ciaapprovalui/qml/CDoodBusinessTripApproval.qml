@@ -359,11 +359,19 @@ CPage{
 
                         anchors.fill: parent
                         onClicked: {
-                            var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
-                            component.callback.connect(function(obj){
-                                console.log("id:"+obj.id+',name:'+obj.name);
-                                selectedUserID = obj.id;
-                                selectedName = obj.name;
+                            ApprovalRequest.getContactsJSONFile(function(resp){
+                                console.log('=================================contact:'+resp);
+                                orgManager.resetDataFromJson(resp);
+                                var orgName = orgManager.nameById(1);
+
+                                orgNavBarManager.clear();
+                                orgNavBarManager.setNav(1,orgName);
+                                var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                                component.callback.connect(function(obj){
+                                    console.log("id:"+obj.id+',name:'+obj.name);
+                                    selectedUserID = obj.id;
+                                    selectedName = obj.name;
+                                });
                             });
                         }
                     }

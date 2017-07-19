@@ -7,6 +7,7 @@ CPage{
 
     property real scale: 1.92
     property string selectedUserID: ''
+    signal callback(var json)
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -16,34 +17,43 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
+        documentsListModel.clear()
         ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
             function onGetFileList(ret) {
                 var obj = {}
-                obj.fileGUID = 'a'
+                obj.fileGUID = '1'
                 obj.fileName = 'LD会议纪要－0930.doc'
                 obj.filePage = 1
                 obj.fileOverTime = 1
                 obj.fileType = '.doc'
                 obj.isSelected = false
-            })
-    }
+                documentsListModel.append(obj)
 
-//    Connections {
-//        target: approvalManager
-//        onCheckResult: {
-//            if (pass) {
-//                pageStack.pop()
-//            }
-//            else{
-//                alertDlg.filename = fillName
-//                alertDlg.show()
-//            }
-//        }
-//        onGetFilesListResult: {
-//            alertDlg.messageText = '您的权限不够，获取不到文件列表'
-//            alertDlg.show()
-//        }
-//    }
+                obj = {}
+                obj.fileGUID = '2'
+                obj.fileName = 'LD会议纪要－0930.pdf'
+                obj.filePage = 2
+                obj.fileOverTime = 1
+                obj.fileType = '.pdf'
+                obj.isSelected = false
+                documentsListModel.append(obj)
+
+                obj = {}
+                obj.fileGUID = '3'
+                obj.fileName = 'LD会议纪要－0930.exe'
+                obj.filePage = 3
+                obj.fileOverTime = 1
+                obj.fileType = '.exe'
+                obj.isSelected = false
+                documentsListModel.append(obj)
+
+                if (documentsListModel.count === 0) {
+                    alertDlg.messageText = '您的权限不够，获取不到文件列表'
+                    alertDlg.show()
+                }
+            }
+        )
+    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -130,7 +140,47 @@ CPage{
                         id: mouseareaSubmit
                         anchors.fill: parent
                         onClicked: {
-                            approvalManager.selectFiles()
+                            ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
+                                function onGetFileList(ret) {
+                                    var arr = []
+                                    var obj = {}
+                                    obj.fileGUID = '1'
+                                    obj.fileName = 'LD会议纪要－0930.doc'
+                                    obj.filePage = 1
+                                    obj.fileOverTime = 1
+                                    obj.fileType = '.doc'
+                                    obj.isSelected = false
+                                    arr.push(obj)
+
+                                    obj = {}
+                                    obj.fileGUID = '2'
+                                    obj.fileName = 'LD会议纪要－0930.pdf'
+                                    obj.filePage = 2
+                                    obj.fileOverTime = 1
+                                    obj.fileType = '.pdf'
+                                    obj.isSelected = false
+                                    arr.push(obj)
+
+                                    for (var i = 0; i < documentsListModel.count; i++) {
+                                        if (!documentsListModel.get(i).isSelected) {
+                                            continue
+                                        }
+
+                                        var flag = false;
+                                        for (var j = 0; j < arr.length; j++) {
+                                            if(documentsListModel.get(i).fileGUID === arr[j].fileGUID) {
+                                                flag = true;
+                                            }
+                                        }
+                                        if (!flag) {
+                                            alertDlg.filename = documentsListModel.get(i).fileName
+                                            alertDlg.show()
+                                        }
+                                    }
+
+                                    emit: callback({id:orgManager.id,name:orgManager.name});
+                                }
+                            )
                         }
                     }
                 }
@@ -258,7 +308,6 @@ CPage{
                 id: fillItemArea
                 anchors.fill: parent
                 onClicked: {
-                    console.log('click')
                     documentsListModel.setProperty(index, 'isSelected', !isSelected)
                 }
             }
@@ -296,22 +345,6 @@ CPage{
             filePage: 1
             fileOverTime: 1
             fileType: '.doc'
-            isSelected: false
-        }
-        ListElement {
-            fileGUID: '2'
-            fileName: 'LD会议纪要－0930.pdf'
-            filePage: 2
-            fileOverTime: 1
-            fileType: '.pdf'
-            isSelected: true
-        }
-        ListElement {
-            fileGUID: '3'
-            fileName: 'LD会议纪要－0930.exe'
-            filePage: 3
-            fileOverTime: 1
-            fileType: '.exe'
             isSelected: false
         }
     }
