@@ -21,26 +21,26 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
-//        approvalManager.approvalAttachmentModel.reset()
+        //        approvalManager.approvalAttachmentModel.reset()
     }
 
-//    Connections {
-//        target: approvalManager
-//        onSendResult:{
-//            indicator.visible = false
-//            if (result == "1")
-//            {
-//                gToast.requestToast("审批已提交","","");
-//                approvalManager.selectedUserID = ''
-//                approvalManager.selectedName = ''
-//                approvalManager.selectedPortrait = ''
-//                pageStack.pop()
-//            }
-//            else {
-//                gToast.requestToast("发送失败","","");
-//            }
-//        }
-//    }
+    //    Connections {
+    //        target: approvalManager
+    //        onSendResult:{
+    //            indicator.visible = false
+    //            if (result == "1")
+    //            {
+    //                gToast.requestToast("审批已提交","","");
+    //                approvalManager.selectedUserID = ''
+    //                approvalManager.selectedName = ''
+    //                approvalManager.selectedPortrait = ''
+    //                pageStack.pop()
+    //            }
+    //            else {
+    //                gToast.requestToast("发送失败","","");
+    //            }
+    //        }
+    //    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -384,11 +384,19 @@ CPage{
 
                         anchors.fill: parent
                         onClicked: {
-                            var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
-                            component.callback.connect(function(obj){
-                                console.log("id:"+obj.id+',name:'+obj.name);
-                                generalApprovalPage.selectedUserID = obj.id;
-                                generalApprovalPage.selectedName = obj.name;
+                            ApprovalRequest.getContactsJSONFile(function(resp){
+                                console.log('=================================contact:'+resp);
+                                orgManager.resetDataFromJson(resp);
+                                var orgName = orgManager.nameById(1);
+
+                                orgNavBarManager.clear();
+                                orgNavBarManager.setNav(1,orgName);
+                                var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                                component.callback.connect(function(obj){
+                                    console.log("id:"+obj.id+',name:'+obj.name);
+                                    generalApprovalPage.selectedUserID = obj.id;
+                                    generalApprovalPage.selectedName = obj.name;
+                                });
                             });
                         }
                     }
@@ -436,8 +444,8 @@ CPage{
                             approver.userName = selectedName
                             approver.userPhotoUrl = selectedPortrait
                             ApprovalRequest.addNewApprovalEvent(approvalType,
-                                createUser, approver, approvalDescriptionContent.text, [],
-                                onSendResult)
+                                                                createUser, approver, approvalDescriptionContent.text, [],
+                                                                onSendResult)
                             indicator.visible = true
                             submitButtonEnabled = false
                         }

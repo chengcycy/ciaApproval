@@ -32,6 +32,7 @@ private:
 
 public:
     Q_INVOKABLE QString myUserId();
+    Q_INVOKABLE QString myName();
 
     ciaapprovalui_Workspace();
 

@@ -7,9 +7,13 @@ CPage {
     property string  server
     property string  name
     property string  password
+
     property int pixelSize: gUtill.dpH(17*fp)
     property int textSize: gUtill.dpH(14*fp)
     property color statusBarClr: "#f7f7f7"
+
+    signal btnLogin(string phone,string passwd)
+
     color:"#f7f7f7"
     onStatusChanged: {
         if (status === CPageStatus.WillShow) {
@@ -48,69 +52,6 @@ CPage {
                 anchors.topMargin: gUtill.dpH(78*fp)
                 antialiasing: true
             }
-
-//            Image {
-//                id:srvTip
-
-//                anchors{
-//                    left: parent.left
-//                    leftMargin:gUtill.dpW(28*fp)
-//                    verticalCenter: srvLineEdit.verticalCenter
-//                }
-//                width: gUtill.dpW(21*fp)
-//                height:gUtill.dpH(21*fp)
-//                fillMode: Image.PreserveAspectFit
-//                source: "qrc:/res/newUi/server@2x.png"
-//            }
-
-//            CLineEdit {
-//                id: srvLineEdit
-//                anchors.top: logoImage.bottom
-//                anchors.left: srvTip.right
-//                anchors.right:parent.right
-//                anchors.topMargin: gUtill.dpH(54*fp)
-//                anchors.leftMargin: gUtill.dpW(17*fp)
-//                anchors.rightMargin: gUtill.dpW(35*fp)
-
-//                height: gUtill.dpH(58*fp)
-//                passwordLabelEnabled: false
-//                clip: true
-//                textColor:"#435377"
-//                font.pixelSize: pixelSize
-//                placeholderText:os.i18n.ctr(qsTr("请输入服务器"))
-//                validator:RegExpValidator{regExp:/^[a-zA-Z0-9.][a-zA-Z0-9.]*$/}
-//                inputMethodHints: Qt.ImhPreferLatin/*| Qt.ImhPreferNumbers */
-//                inputMethodHintExtensions: {
-//                    var args = {};
-//                    args["enterKeyText"] = "next";
-//                    return args;
-//                }
-//                text: loginManager.getLoginService();
-
-//                onTextChanged: {
-//                    passWordEdit.text = ""
-
-//                    if(authPage.state !== "hidden") {
-//                        authPage.state = "hidden"
-//                    }
-//                }
-
-//                onKeyPressed: {
-//                    if (key === Qt.Key_Return)
-//                    {
-//                        userLineEdit.forceActiveFocus()
-//                    }
-//                }
-//            }
-//            CLine {
-//                id: lineUser
-//                anchors.top: logoImage.bottom
-//                anchors.left: userLineEdit.left
-//                height: gUtill.dpH(1*fp)
-//                width: userLineEdit.width
-//                z: parent.z+2
-//                color: "#e7e9f0"
-//            }
             Image{
                 id:userTip
 
@@ -134,6 +75,8 @@ CPage {
                 anchors.leftMargin: gUtill.dpW(17*fp)/*srvLineEdit.text ==="" ? 50 : 0*/
                 anchors.rightMargin: gUtill.dpW(35*fp)
 
+                text:'15829282344'
+
                 height: gUtill.dpH(58*fp)
                 passwordLabelEnabled: false
                 clip: true
@@ -147,8 +90,6 @@ CPage {
                     args["enterKeyText"] = "next";
                     return args;
                 }
-                text: ""
-
                 onTextChanged: {
                     passWordEdit.text = "";
 
@@ -221,7 +162,7 @@ CPage {
                 CButton{
                     id: seePassword;
                     anchors.right: parent.right
-//                    anchors.rightMargin: gUtill.dpW2(20)
+                    //                    anchors.rightMargin: gUtill.dpW2(20)
                     iconSource: passWordEdit.echoMode === TextInput.Normal ? "qrc:/res/echo_normal.png" : "qrc:/res/echo_pwd.png"
                     backgroundEnabled: false
                     width: gUtill.dpW(22*fp)
@@ -292,13 +233,6 @@ CPage {
             //                    pageStack.replace(Qt.resolvedUrl("AuthMainPage.qml"), "", true);
             //                }
             //            }
-
-            CIndicatorDialog {
-                id:loadingDialog
-                messageText: os.i18n.ctr(qsTr("正在登录中..."))
-                messageTextPixelSize:textSize
-            }
-
             function login() {
                 //                if(srvLineEdit.text ===""){
                 //                    gToast.requestToast("服务器不能为空","","");
@@ -319,7 +253,7 @@ CPage {
                     passWordEdit.focus = true
                     gToast.requestToast("密码不能为空","","");
                 } else {
-                    //                    loadingDialog.show();
+                   emit: btnLogin(userLineEdit.text,passWordEdit.text);
                 }
             }
         }

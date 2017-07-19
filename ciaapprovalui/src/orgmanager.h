@@ -77,6 +77,7 @@ public:
     Q_INVOKABLE void resetModel(qint64 id);
     Q_INVOKABLE void setSel(qint64 id);
     Q_INVOKABLE void clear();
+    Q_INVOKABLE QString nameById(qint64 id);
 
     qint64 id();
     QString name();

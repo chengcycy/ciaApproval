@@ -1,51 +1,84 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import 'CDoodApprovalRequest.js' as ApprovalRequest
+
+import "./CDoodApprovalRequest.js" as Helper
 
 CPageStackWindow {
+    id: mainPageView
+    inputFactor: 0
+    keyHandle:false
+    onBackKey:{
+        if(clearFocus()){
+            event.accepted =true
+            return
+        }
+        console.log('==================================depth:'+mainPageView.pageStack.depth)
+        if(mainPageView.pageStack.depth > 1) {
+            mainPageView.pageStack.pop();
+        } else {
+            winHide()
+        }
+    }
+    Keys.onReleased:{
+        if (event.key === Qt.Key_Home) {
+            winHide();
+        }
+    }
     initialPage:CPage{
-        width:parent.width
-        height:parent.height
-        CButton {
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: approvalBtn.top
-            anchors.bottomMargin: 30
-            text: '登录接口'
-            onClicked: {
-                ApprovalRequest.getJSONFile(onGetJSONFile)
-                //////////////////////////////////////////////////////
-            }
-        }
-        CButton {
-            id: approvalBtn
-            anchors.centerIn: parent
-            text: '审批'
-            onClicked: {
-                pageStack.push(Qt.resolvedUrl('CDoodApprovalPage.qml'))
-            }
-        }
-        CButton {
-            id: orgBtn
+        id: startPage
+        anchors.fill: parent
+        orientationLock: CPageOrientation.LockPortrait
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.top: approvalBtn.bottom
-            anchors.topMargin: 30
-            text: '组织架构'
-            onClicked: {
-//                ApprovalRequest.getJSONFile(onGetJSONFile)
-                console.log('1111111111111111111111111111111111')
-                var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
-                component.callback.connect(function(obj){
-                    console.log("id:"+obj.id+',name:'+obj.name);
+        onStateChanged: {
+            if (status == CPageStatus.WillShow) {
+                gScreenInfo.setWindowProperty("STATUSBAR_VISIBLE",true)
+                gScreenInfo.setWindowProperty("STATUSBAR_STYLE","transBlack")
+            }
+        }
+    }
+    Component.onCompleted: {
+        console.log('userId:'+mainApp.myUserId()+',Name:'+mainApp.myName());
+        pageStack.clear();
+        var userId = mainApp.myUserId();
+/*        if(userId !== ""){
+            mainApp.currentID = mainApp.myUserId();
+            mainApp.currentName = mainApp.myName();
+            pageStack.push(Qt.resolvedUrl("./CDoodApprovalPage.qml"), "", true);
+        }else*/{
+            var page = pageStack.push(Qt.resolvedUrl("./AuthPage.qml"), "", true);
+            page.btnLogin.connect(function(phone,passwd){
+                loadingDialog.show();
+                Helper.getJSONFile(function(resp){
+                    console.log("resp:"+resp);
+                    var data = JSON.parse(resp);
+                    loadingDialog.hide();
+                    var loginOk = false;
+                    if(data.hasOwnProperty('staffList')){
+                        var staffList = data.staffList;
+                        for(var i =0;i<staffList.length;++i){
+                            var item = staffList[i];
+                            if((item.phone+'') === phone){
+                                mainApp.currentID = item.userID;
+                                mainApp.currentName = item.userName;
+                                pageStack.clear();
+                                pageStack.push(Qt.resolvedUrl("./CDoodApprovalPage.qml"), "", true);
+                                loginOk = true;
+                                break;
+                            }
+                        }
+                    }
+                    if(!loginOk){
+                        console.log('login err.');
+                    }
                 });
-            }
+            });
         }
     }
 
-    function onGetJSONFile(ret) {
-        var obj = JSON.parse(ret)
-        console.log('Danger test:' + obj.staffList[0].userID)
-        mainApp.currentID = obj.staffList[0].userID
-        mainApp.currentName = obj.staffList[0].userName
+    CIndicatorDialog {
+        id:loadingDialog
+        messageText: os.i18n.ctr(qsTr("正在登录中..."))
+        messageTextPixelSize:gUtill.dpH2(32);
     }
+
 }

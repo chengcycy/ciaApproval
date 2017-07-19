@@ -13,6 +13,13 @@ QString ciaapprovalui_Workspace::myUserId()
     return myUserId;
 }
 
+QString ciaapprovalui_Workspace::myName()
+{
+    QSettings settings(CONFIG_FILE, QSettings::IniFormat);
+    QString myName = settings.value("myName","").toString();
+    return myName;
+}
+
 ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     : CWorkspace()
 {
