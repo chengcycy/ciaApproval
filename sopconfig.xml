@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sopconfig syberos:versionCode="1" xmlns:syberos="http://schemas.syberos.com/rpm/res/syberos" syberos:sopid="com.vrv.ciaapproval" syberos:shareUserId="" syberos:versionName="1.0.0">
     <uses-permission syberos:name="syberos.permission.ACCESS_DATA_NETWORK"/>
+    <uses-permission syberos:name="syberos.permission.ACCESS_STORAGE"/>
     <uses-permission syberos:name="syberos.permission.ACCESS_WIFI"/>
-    <uses-sdk syberos:targetSdkVersion="" syberos:minSdkVersion=""/>
-    <application syberos:description="审批 for application here. " syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png" syberos:debuggable="true">
-        <uiapp syberos:splash="" syberos:id="ciaapprovalui" syberos:exec="bin/ciaapprovalui" syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png" syberos:background="" syberos:launcher="true">
+    <uses-permission syberos:name="syberos.permission.ADMIN_DATA_NETWORK"/>
+    <uses-permission syberos:name="syberos.permission.MDM"/>
+    <uses-sdk syberos:minSdkVersion="" syberos:targetSdkVersion=""/>
+    <application syberos:debuggable="true" syberos:description="审批 for application here. " syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png">
+        <uiapp syberos:launcher="true" syberos:exec="bin/ciaapprovalui" syberos:splash="" syberos:name="信源审批" syberos:icon="res/ciaapprovalui.png" syberos:id="ciaapprovalui" syberos:background="">
             <doctype syberos:id=""/>
         </uiapp>
     </application>
