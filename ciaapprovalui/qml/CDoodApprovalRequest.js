@@ -1,5 +1,5 @@
 //var server = 'http://10.11.26.187:11014'
-var server = 'http://210.14.152.181:8188'
+var server = 'http://210.14.152.181:8400'
 
 function getJSONFile(callback) {
     var interfacePath = '/Approval/ApprovalController/getJSONFile.do?jsonFile=users.json'

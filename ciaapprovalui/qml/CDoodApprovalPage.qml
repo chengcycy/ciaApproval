@@ -15,7 +15,7 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
-        ApprovalRequest.selectNeedApprovalEvent(currentID, 0,
+        ApprovalRequest.selectNeedApprovalEvent(mainApp.currentID, 0,
                                                 onGetUndetermindListCount)
     }
 //    onStatusChanged: {

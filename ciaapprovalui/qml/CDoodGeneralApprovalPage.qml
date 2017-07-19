@@ -427,8 +427,6 @@ CPage{
                     anchors.fill: parent
                     onClicked: {
                         if (submitButton.enabled) {
-                            console.log('send user:' + mainApp.currentID)
-                            console.log('send name:' + mainApp.currentName)
                             var createUser = {}
                             createUser.userID = mainApp.currentID
                             createUser.userName = mainApp.currentName
