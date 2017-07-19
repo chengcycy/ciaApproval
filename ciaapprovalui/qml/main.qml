@@ -40,7 +40,7 @@ CPageStackWindow {
         console.log('userId:'+mainApp.myUserId()+',Name:'+mainApp.myName());
         pageStack.clear();
         var userId = mainApp.myUserId();
-/*        if(userId !== ""){
+        /*        if(userId !== ""){
             mainApp.currentID = mainApp.myUserId();
             mainApp.currentName = mainApp.myName();
             pageStack.push(Qt.resolvedUrl("./CDoodApprovalPage.qml"), "", true);
@@ -77,6 +77,7 @@ CPageStackWindow {
 
     CIndicatorDialog {
         id:loadingDialog
+        canceledOnBackKeyReleased: true
         messageText: os.i18n.ctr(qsTr("正在登录中..."))
         messageTextPixelSize:gUtill.dpH2(32);
     }

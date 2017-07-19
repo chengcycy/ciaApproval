@@ -44,9 +44,10 @@ CPage {
             }
             Image {
                 id: logoImage
-                source:"qrc:/res/ciaapprovalui.png"
-                height:gUtill.dpH(76*fp)
-                width: gUtill.dpW(106*fp)
+                source:"qrc:/res/logo.png"
+                width:360
+                height: width
+
                 anchors.top: parent.top
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.topMargin: gUtill.dpH(78*fp)
@@ -202,7 +203,7 @@ CPage {
 
                 backgroundComponent: Rectangle {
                     anchors.fill: parent
-                    color:"#6021dc"
+                    color:"#394871"//"#6021dc"
                     radius: gUtill.dpW(28*fp)
 
                 }
