@@ -61,6 +61,7 @@ CPage{
                 Rectangle {
                     id: buttonBack
 
+                    visible: false
                     width: gUtill.dpW2(53 * approvalPage.scale)
                     height: gUtill.dpH2(22 * approvalPage.scale)
                     anchors {

@@ -49,5 +49,6 @@
         <file>res/id.png</file>
         <file>res/checked.png</file>
         <file>res/ic_next_more@1.5x.png</file>
+        <file>res/logo.png</file>
     </qresource>
 </RCC>

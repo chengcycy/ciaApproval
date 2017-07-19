@@ -11,7 +11,7 @@ CPage{
             gScreenInfo.setStatusBar(root.statusBarHoldEnabled)
             root.statusBarHoldItemColor = "#394871"
             gScreenInfo.setStatusBarStyle("transwhite")
-            orgNavBarManager.test();
+            orgManager.resetModel(1);
         }
     }
     contentAreaItem:Item{

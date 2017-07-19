@@ -7,6 +7,7 @@
 #include <QFile>
 void OrgManager::resetDataFromJson(QString json)
 {
+    clear();
     m_data.clear();
 
     QJsonParseError err;
@@ -89,6 +90,11 @@ void OrgManager::clear()
     mSelId = 0;
 }
 
+QString OrgManager::nameById(qint64 id)
+{
+    return searchByUserId(id).userName;
+}
+
 qint64 OrgManager::id()
 {
     return mSelId;
@@ -110,11 +116,11 @@ OrgManager::OrgManager(QObject*parent):CDoodListModel(parent)
     qRegisterMetaType<OrgManager*>();
     mSelId = 0;
     //test
-    QFile file(DATA_CONFIG_FILE);
-    if(file.open(QIODevice::ReadOnly)){
-        resetDataFromJson(file.readAll());
-        file.close();
-    }
+//    QFile file(DATA_CONFIG_FILE);
+//    if(file.open(QIODevice::ReadOnly)){
+//        resetDataFromJson(file.readAll());
+//        file.close();
+//    }
 }
 
 OrgManager::~OrgManager()
@@ -249,7 +255,7 @@ void OrgManagerNavBar::setNav(qint64 id,QString name)
 OrgManagerNavBar::OrgManagerNavBar(QObject *parent):CDoodListModel(parent)
 {
     qRegisterMetaType<OrgManagerNavBar*>();
-    setNav(1,"中国科学院");
+//    setNav(1,"中国科学院");
 }
 
 void OrgManagerNavBar::clear()
@@ -259,7 +265,7 @@ void OrgManagerNavBar::clear()
 
 void OrgManagerNavBar::test()
 {
-    setNav(1,"中国科学院");
+//    setNav(1,"中国科学院");
 }
 
 OrgManagerNavBar::~OrgManagerNavBar()

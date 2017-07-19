@@ -1,6 +1,36 @@
 //var server = 'http://10.11.26.187:11014'
 var server = 'http://210.14.152.181:8400'
 
+
+function getContactsJSONFile(callback) {
+    var interfacePath = '/Approval/ApprovalController/getJSONFile.do?jsonFile=contacts.json'
+
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+            console.log("Headers -->");
+            console.log(httpRequest.getAllResponseHeaders ());
+            console.log("Last modified -->");
+            console.log(httpRequest.getResponseHeader ("Last-Modified"));
+        } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            if (callback) {
+                callback(httpRequest.responseText)
+            }
+            console.log(httpRequest.responseText);
+        }
+    }
+    httpRequest.onerror = function() {
+        console.log('error')
+    }
+
+    var url = server + interfacePath
+    url = encodeURI(url)
+    httpRequest.open('POST', url)
+    httpRequest.send()
+
+    console.log(url)
+}
+
 function getJSONFile(callback) {
     var interfacePath = '/Approval/ApprovalController/getJSONFile.do?jsonFile=users.json'
 
