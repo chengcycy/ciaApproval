@@ -4,6 +4,7 @@
 #include <QFile>
 #include <csystempackagemanager.h>
 
+void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg);
 
 QString ciaapprovalui_Workspace::myUserId()
 {
@@ -24,14 +25,21 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
     : CWorkspace()
 {
 
+    QDir path(APP_SAVE_DATA_PATH);
+    if(!path.exists()){
+        path.mkdir(APP_SAVE_DATA_PATH);
+    }
+    //log
+    //    qInstallMessageHandler(outputMessage);
+
     bool insatllLinkDood = false;
     CSystemPackageManager pkg;
     QList<QSharedPointer<CPackageInfo> > list = pkg.packageInfoList();
     for(auto i :list){
-       if(i->sopid() == "com.vrv.linkDood"){
-           insatllLinkDood = true;
-           break;
-       }
+        if(i->sopid() == "com.vrv.linkDood"){
+            insatllLinkDood = true;
+            break;
+        }
     }
     if(!insatllLinkDood){
         QFile file(CONFIG_FILE);
@@ -111,4 +119,41 @@ void ciaapprovalui_Workspace::setCurrentName(const QString currentName)
         emit currentNameChanged();
     }
 }
+void outputMessage(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+    static QMutex mutex;
+    mutex.lock();
 
+    QString text;
+    switch (type)
+    {
+    case QtDebugMsg:
+        text = QString("Debug:");
+        break;
+
+    case QtWarningMsg:
+        text = QString("Warning:");
+        break;
+
+    case QtCriticalMsg:
+        text = QString("Critical:");
+        break;
+
+    case QtFatalMsg:
+        text = QString("Fatal:");
+    }
+
+    QString context_info = QString("File:(%1) Line:(%2)").arg(QString(context.file)).arg(context.line);
+    QString current_date_time = QDateTime::currentDateTime().toString("yyyy-MM-dd hh:mm:ss ddd");
+    QString current_date = QString("(%1)").arg(current_date_time);
+    QString message = QString("%1 %2 %3 %4").arg(text).arg(context_info).arg(msg).arg(current_date);
+
+    QFile file(APP_SAVE_DATA_PATH+QDateTime::currentDateTime().toString("yyyy-MM-dd")+"-log.txt");
+    file.open(QIODevice::WriteOnly | QIODevice::Append);
+    QTextStream text_stream(&file);
+    text_stream << message << "\r\n";
+    file.flush();
+    file.close();
+
+    mutex.unlock();
+}

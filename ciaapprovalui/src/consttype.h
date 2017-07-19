@@ -6,4 +6,5 @@
 #define DBUS_DOOD_INTERFACE  "com.vrv.approval"
 #define DATA_CONFIG_FILE     "/data/apps/com.vrv.ciaapproval/res/contacts.json"
 #define CONFIG_FILE          "/home/user/.ciaapproval.ini"
+#define APP_SAVE_DATA_PATH   "/home/user/ciaapproval/"
 #endif // CONSTTYPE_H
