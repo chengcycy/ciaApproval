@@ -1,13 +1,14 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../'
-import '../component' as Com
 import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: businessTripApprovalPage
 
     property real scale: 1.92
+    property string selectedUserID: ''
+    property string selectedName: ''
+    property string selectedPortrait: ''
     property alias submitButtonEnabled: submitButton.enabled
 
     statusBarHoldEnabled: false
@@ -17,29 +18,6 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-
-        approvalManager.selectedUserID = ''
-        approvalManager.selectedName = ''
-        approvalManager.selectedPortrait = ''
-    }
-
-    Connections {
-        target: approvalManager
-        onSendResult:{
-            indicator.visible = false
-            submitButtonEnabled = true
-            if (result == "1")
-            {
-                gToast.requestToast("审批已提交","","");
-                approvalManager.selectedUserID = ''
-                approvalManager.selectedName = ''
-                approvalManager.selectedPortrait = ''
-                pageStack.pop()
-            }
-            else {
-                gToast.requestToast("发送失败","","");
-            }
-        }
     }
 
     contentAreaItem: Item {
@@ -98,7 +76,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * businessTripApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * businessTripApprovalPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -372,15 +350,22 @@ CPage{
                         leftMargin: gUtill.dpW2(15 * businessTripApprovalPage.scale)
                     }
 
-                    iconSource: approvalManager.selectedUserID ==='' ?
-                                    setIcon('1', 'qrc:/res/newUi/approval/ic_add.png') :
-                                    setIcon('1', approvalManager.selectedPortrait)
+                    iconSource: selectedUserID ===''
+                                ? setIcon('1', 'qrc:/res/approval/ic_add.png')
+                                : setIcon('1', selectedPortrait)
 
                     MouseArea {
                         id: mouseareaAddApprover
 
                         anchors.fill: parent
-                        onClicked: pageStack.push(Qt.resolvedUrl('../group/GroupAddMainPage.qml'), {isApproval: true});
+                        onClicked: {
+                            var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                            component.callback.connect(function(obj){
+                                console.log("id:"+obj.id+',name:'+obj.name);
+                                selectedUserID = obj.id;
+                                selectedName = obj.name;
+                            });
+                        }
                     }
                 }
 
@@ -398,10 +383,9 @@ CPage{
                 anchors.bottom: parent.bottom
                 color: enabled ? '#577EDD' : '#A2BCE8'
                 enabled: siteInputTextArea.text.length > 0
-                         && approvalManager.selectedUserID !== ''
+                         && selectedUserID !== ''
                          && startTimeButton.rigthText.length > 0
                          && endTimeButton.rigthText.length > 0
-                         //&& !indicator.visible
 
                 Text {
                     id: submitText
@@ -426,13 +410,13 @@ CPage{
                             content.pos_change_to = siteInputTextArea.text
                             content.outReaSon = businessTripReasonContentTextArea.text
                             var createUser = {}
-                            createUser.userID = userProfileManager.id
-                            createUser.userName = userProfileManager.name
-                            createUser.userPhotoUrl = userProfileManager.thumbAvatar
+                            createUser.userID = selectedUserID
+                            createUser.userName = selectedName
+                            createUser.userPhotoUrl = selectedPortrait
                             var approver = {}
-                            approver.userID = approvalManager.selectedUserID
-                            approver.userName = approvalManager.selectedName
-                            approver.userPhotoUrl = approvalManager.selectedPortrait
+                            approver.userID = selectedUserID
+                            approver.userName = selectedName
+                            approver.userPhotoUrl = selectedPortrait
                             ApprovalRequest.addNewApprovalEvent(8,
                                                                 createUser,
                                                                 approver,
@@ -454,19 +438,6 @@ CPage{
             }
         }
     }
-
-//    Com.CDoodTimePickerDialog {
-//        id: timePickerDialog
-//        property bool isStart: true
-//        onAccepted: {
-//            if (isStart) {
-//                startTimeButton.rigthText = messageAreaItem.curDate + ' ' + messageAreaItem.curTime
-//            }
-//            else {
-//                endTimeButton.rigthText = messageAreaItem.curDate + ' ' + messageAreaItem.curTime
-//            }
-//        }
-//    }
 
     CDatePickerDialog {
         id: datePicker
@@ -498,9 +469,6 @@ CPage{
         var obj = JSON.parse(ret)
         if (obj.code === 1) {
             gToast.requestToast("审批已提交","","");
-            approvalManager.selectedUserID = ''
-            approvalManager.selectedName = ''
-            approvalManager.selectedPortrait = ''
             pageStack.pop()
         }
         else {

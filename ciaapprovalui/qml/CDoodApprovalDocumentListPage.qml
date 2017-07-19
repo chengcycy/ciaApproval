@@ -1,11 +1,12 @@
 ﻿import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import "../"
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: approvalDocumentListPage
 
     property real scale: 1.92
+    property string selectedUserID: ''
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -15,25 +16,34 @@ CPage{
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
 
-        approvalManager.approvalDocumentsModel.reset()
+        ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
+            function onGetFileList(ret) {
+                var obj = {}
+                obj.fileGUID = 'a'
+                obj.fileName = 'LD会议纪要－0930.doc'
+                obj.filePage = 1
+                obj.fileOverTime = 1
+                obj.fileType = '.doc'
+                obj.isSelected = false
+            })
     }
 
-    Connections {
-        target: approvalManager
-        onCheckResult: {
-            if (pass) {
-                pageStack.pop()
-            }
-            else{
-                alertDlg.filename = fillName
-                alertDlg.show()
-            }
-        }
-        onGetFilesListResult: {
-            alertDlg.messageText = '您的权限不够，获取不到文件列表'
-            alertDlg.show()
-        }
-    }
+//    Connections {
+//        target: approvalManager
+//        onCheckResult: {
+//            if (pass) {
+//                pageStack.pop()
+//            }
+//            else{
+//                alertDlg.filename = fillName
+//                alertDlg.show()
+//            }
+//        }
+//        onGetFilesListResult: {
+//            alertDlg.messageText = '您的权限不够，获取不到文件列表'
+//            alertDlg.show()
+//        }
+//    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -95,7 +105,6 @@ CPage{
                         id: mouseareaBack
                         anchors.fill: parent
                         onClicked: {
-                            approvalManager.approvalDocumentsModel.reset()
                             pageStack.pop();
                         }
                     }
@@ -142,7 +151,7 @@ CPage{
                     searchLabelEnabled: true
                     searchLabelLeftMargin: gUtill.dpW2(130 * approvalDocumentListPage.scale)
                     searchLabelRightMargin: 0
-                    searchLabelIcon: 'qrc:/res/newUi/approval/ic_search_nor.png'
+                    searchLabelIcon: 'qrc:/res/approval/ic_search_nor.png'
                     placeholderText: qsTr("搜索")
                     placeholderTextItem.color: '#475883'
                     placeholderTextItem.font.family: 'PingFangSC-Regular'
@@ -171,7 +180,7 @@ CPage{
                 width: parent.width
                 anchors.top: titleArea.bottom
                 anchors.bottom: parent.bottom
-                model: approvalManager.approvalDocumentsModel
+                model: documentsListModel
                 delegate: fillItemDelegate
                 clip: true
             }
@@ -198,7 +207,7 @@ CPage{
                 sourceSize.width: gUtill.dpW2(20 * approvalDocumentListPage.scale)
                 sourceSize.height: gUtill.dpH2(20 * approvalDocumentListPage.scale)
 
-                source: getFillFormatIcon(model.modelData.fileType)
+                source: getFillFormatIcon(fileType)
                 fillMode: Image.PreserveAspectFit
             }
 
@@ -214,7 +223,7 @@ CPage{
                     verticalCenter: parent.verticalCenter
                 }
 
-                text: model.modelData.fileName
+                text: fileName
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(18 * approvalDocumentListPage.scale)
                 color: '#545454'
@@ -232,9 +241,9 @@ CPage{
                 sourceSize.width: gUtill.dpW2(21 * approvalDocumentListPage.scale)
                 sourceSize.height: gUtill.dpH2(21 * approvalDocumentListPage.scale)
 
-                source: model.modelData.isSelected
-                        ? 'qrc:/res/newUi/approval/ic_list_sele.png'
-                        : 'qrc:/res/newUi/approval/ic_list_nor.png'
+                source: isSelected
+                        ? 'qrc:/res/approval/ic_list_sele.png'
+                        : 'qrc:/res/approval/ic_list_nor.png'
                 fillMode: Image.PreserveAspectFit
             }
 
@@ -248,7 +257,10 @@ CPage{
             MouseArea {
                 id: fillItemArea
                 anchors.fill: parent
-                onClicked: model.modelData.isSelected = !model.modelData.isSelected
+                onClicked: {
+                    console.log('click')
+                    documentsListModel.setProperty(index, 'isSelected', !isSelected)
+                }
             }
         }
     }
@@ -263,32 +275,44 @@ CPage{
 
     function getFillFormatIcon(type) {
         if(type === '.doc'){
-            return "qrc:/res/newUi/approval/ic_cloud_doc.png";
+            return "qrc:/res/approval/ic_cloud_doc.png";
         }
         else if(type === '.exe') {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png";
+            return "qrc:/res/approval/ic_cloud_exe.png";
         }
         else if(type === '.pdf') {
-            return "qrc:/res/newUi/approval/ic_cloud_pdf.png";
+            return "qrc:/res/approval/ic_cloud_pdf.png";
         }
         else {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png"
+            return "qrc:/res/approval/ic_cloud_exe.png"
         }
     }
 
     ListModel {
-        id: listmodel
+        id: documentsListModel
         ListElement {
-            type: 'doc'
-            fillname: 'LD会议纪要－0930.doc'
+            fileGUID: '1'
+            fileName: 'LD会议纪要－0930.doc'
+            filePage: 1
+            fileOverTime: 1
+            fileType: '.doc'
+            isSelected: false
         }
         ListElement {
-            type: 'pdf'
-            fillname: 'LD会议纪要－0930.pdf'
+            fileGUID: '2'
+            fileName: 'LD会议纪要－0930.pdf'
+            filePage: 2
+            fileOverTime: 1
+            fileType: '.pdf'
+            isSelected: true
         }
         ListElement {
-            type: 'exe'
-            fillname: 'LD会议纪要－0930.exe'
+            fileGUID: '3'
+            fileName: 'LD会议纪要－0930.exe'
+            filePage: 3
+            fileOverTime: 1
+            fileType: '.exe'
+            isSelected: false
         }
     }
 }

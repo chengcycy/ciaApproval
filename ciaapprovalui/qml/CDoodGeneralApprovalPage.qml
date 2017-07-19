@@ -24,24 +24,6 @@ CPage{
 //        approvalManager.approvalAttachmentModel.reset()
     }
 
-//    Connections {
-//        target: approvalManager
-//        onSendResult:{
-//            indicator.visible = false
-//            if (result == "1")
-//            {
-//                gToast.requestToast("审批已提交","","");
-//                approvalManager.selectedUserID = ''
-//                approvalManager.selectedName = ''
-//                approvalManager.selectedPortrait = ''
-//                pageStack.pop()
-//            }
-//            else {
-//                gToast.requestToast("发送失败","","");
-//            }
-//        }
-//    }
-
     contentAreaItem: Item {
         anchors.fill: parent
 

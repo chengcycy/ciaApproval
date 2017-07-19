@@ -1,11 +1,14 @@
 ﻿import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../' as Com
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: documentApprovalPage
 
     property real scale: 1.92
+    property string selectedUserID: ''
+    property string selectedName: ''
+    property string selectedPortrait: ''
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -14,30 +17,25 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-
-        approvalManager.selectedUserID = ''
-        approvalManager.selectedName = ''
-        approvalManager.selectedPortrait = ''
-        approvalManager.approvalDocumentsModel.reset()
     }
 
-    Connections {
-        target: approvalManager
-        onSendResult:{
-            if (result == "1")
-            {
-                gToast.requestToast("审批已提交","","");
-                approvalManager.selectedUserID = ''
-                approvalManager.selectedName = ''
-                approvalManager.selectedPortrait = ''
-                pageStack.pop()
-            }
-            else {
-                gToast.requestToast("发送失败","","");
-            }
-            indicator.visible = false
-        }
-    }
+//    Connections {
+//        target: approvalManager
+//        onSendResult:{
+//            if (result == "1")
+//            {
+//                gToast.requestToast("审批已提交","","");
+//                approvalManager.selectedUserID = ''
+//                approvalManager.selectedName = ''
+//                approvalManager.selectedPortrait = ''
+//                pageStack.pop()
+//            }
+//            else {
+//                gToast.requestToast("发送失败","","");
+//            }
+//            indicator.visible = false
+//        }
+//    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -95,7 +93,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * documentApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * documentApprovalPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -136,7 +134,7 @@ CPage{
                 width: parent.width
                 height: gUtill.dpH2(count * 49 * documentApprovalPage.scale)
                 anchors.top: titleArea.bottom
-                model: approvalManager.approvalDocumentsModel
+                model: documentListModel
                 delegate: fillItemDelegate
                 clip: true
             }
@@ -171,7 +169,7 @@ CPage{
                         sourceSize.width: gUtill.dpW2(18 * documentApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(18 * documentApprovalPage.scale)
 
-                        source: 'qrc:/res/newUi/approval/ic_add to.png'
+                        source: 'qrc:/res/approval/ic_add to.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -200,13 +198,13 @@ CPage{
                     id: mouseAreaAddFiles
                     anchors.fill: parent
                     onClicked: {
-                        if (approvalManager.selectedUserID === '') {
+                        if (selectedUserID === '') {
                             gToast.requestToast("请先选择审批人");
                             return;
                         }
 
-                        pageStack.push(Qt.resolvedUrl('CDoodApprovalDocumentListPage.qml'));
-                        approvalManager.getFilesList()
+                        pageStack.push(Qt.resolvedUrl('CDoodApprovalDocumentListPage.qml'),
+                                       {selectedUserID: selectedUserID});
                     }
                 }
             }
@@ -307,7 +305,7 @@ CPage{
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                Com.CDoodHeaderImage {
+                CDoodHeaderImage {
                     id: addApproverIcon
 
                     width: gUtill.dpW2(45 * documentApprovalPage.scale)
@@ -319,15 +317,22 @@ CPage{
                         leftMargin: gUtill.dpW2(15 * documentApprovalPage.scale)
                     }
 
-                    iconSource: approvalManager.selectedUserID ==='' ?
-                                    setIcon('1', 'qrc:/res/newUi/approval/ic_add.png') :
-                                    setIcon('1', approvalManager.selectedPortrait)
+                    iconSource: selectedUserID ==='' ?
+                                    setIcon('1', 'qrc:/res/approval/ic_add.png') :
+                                    setIcon('1', selectedPortrait)
 
                     MouseArea {
                         id: mouseareaAddApprover
 
                         anchors.fill: parent
-                        onClicked: pageStack.push(Qt.resolvedUrl('../group/GroupAddMainPage.qml'), {isApproval: true});
+                        onClicked: {
+                            var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                            component.callback.connect(function(obj){
+                                console.log("id:"+obj.id+',name:'+obj.name);
+                                selectedUserID = obj.id;
+                                selectedName = obj.name;
+                            });
+                        }
                     }
                 }
 
@@ -346,7 +351,7 @@ CPage{
 
                 enabled: contextTextArea.length > 0
                          && approvalDocumentList.count > 0
-                         && approvalManager.selectedUserID !== ''
+                         && selectedUserID !== ''
                          && !indicator.visible
 
                 color: enabled ? '#577EDD' : '#A2BCE8'
@@ -398,7 +403,7 @@ CPage{
                         sourceSize.width: gUtill.dpW2(20 * documentApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * documentApprovalPage.scale)
 
-                        source: getFillFormatIcon(model.modelData.fileType)
+                        source: getFillFormatIcon(fileType)
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -414,7 +419,7 @@ CPage{
                             verticalCenter: parent.verticalCenter
                         }
 
-                        text: model.modelData.fileName
+                        text: fileName
                         font.family: 'PingFangSC-Regular'
                         font.pixelSize: gUtill.dpH2(18 * documentApprovalPage.scale)
                         color: '#545454'
@@ -432,13 +437,13 @@ CPage{
                         sourceSize.width: gUtill.dpW2(21 * documentApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(21 * documentApprovalPage.scale)
 
-                        source: 'qrc:/res/newUi/approval/ic_list_Delete Reveal.png'
+                        source: 'qrc:/res/approval/ic_list_Delete Reveal.png'
                         fillMode: Image.PreserveAspectFit
 
                         MouseArea {
                             id: deleteFileArea
                             anchors.fill: parent
-                            onClicked: approvalManager.approvalDocumentsModel.removeItem(index)
+                            onClicked: documentListModel.remove(index)
                         }
                     }
 
@@ -468,18 +473,26 @@ CPage{
         onAccepted: pageStack.pop()
     }
 
+    ListModel {
+        id: documentListModel
+        ListElement {
+            fileType: '.doc'
+            fileName: 'test.doc'
+        }
+    }
+
     function getFillFormatIcon(type) {
         if(type === '.doc'){
-            return "qrc:/res/newUi/approval/ic_cloud_doc.png";
+            return "qrc:/res/approval/ic_cloud_doc.png";
         }
         else if(type === '.exe') {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png";
+            return "qrc:/res/approval/ic_cloud_exe.png";
         }
         else if(type === '.pdf') {
-            return "qrc:/res/newUi/approval/ic_cloud_pdf.png";
+            return "qrc:/res/approval/ic_cloud_pdf.png";
         }
         else {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png"
+            return "qrc:/res/approval/ic_cloud_exe.png"
         }
     }
 }

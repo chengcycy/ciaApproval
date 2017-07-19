@@ -6,6 +6,7 @@ CPage{
     id: approvalPage
 
     property real scale: 1.92
+    property bool isCheckingAuth: false
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -22,28 +23,6 @@ CPage{
 //        if (status === CPageStatus.WillShow) {
 //            approvalManager.undeterminedApprovalModel.reset();
 //            approvalManager.getUndetermindApprovalList(userProfileManager.id, 0)
-//        }
-//    }
-
-//    Connections {
-//        target: approvalManager
-//        onUserOutAuthResult: {
-//            if (type === 0) {
-//                return;
-//            }
-
-//            if (trustLevel === 0) {
-//                pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
-//            }
-//            else {
-//                if (trustLevel === -2) {
-//                    alertDlg.messageText = "验证失败，请检查网络"
-//                }
-//                else {
-//                    alertDlg.messageText = "您目前无权在移动端使用公文审批服务"
-//                }
-//                alertDlg.show()
-//            }
 //        }
 //    }
 
@@ -382,8 +361,16 @@ CPage{
                             anchors.fill: parent
                             onClicked: {
                                 if (name === '公文审批') {
-                                    ApprovalRequest.userOutAuth(userProfileManager.id,
-                                                                onAuthResult)
+                                    pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
+//                                    if (!isCheckingAuth) {
+//                                        isCheckingAuth = true;
+//                                        ApprovalRequest.userOutAuth(mainApp.currentID,
+//                                                                    onAuthResult);
+//                                    }
+//                                    else {
+//                                        alertDlg.messageText = "正在检查权限，请等待验证结果"
+//                                        alertDlg.show();
+//                                    }
                                     return;
                                 }
                                 else if (name === '出差') {
@@ -459,23 +446,31 @@ CPage{
     CAlertDialog {
         id: alertDlg
         titleAreaEnabled: false
-        messageText: approvalManager.distrustReason
     }
 
     function onAuthResult(ret) {
-        //indicator.visible = false
-        var obj = JSON.parse(ret)
+        isCheckingAuth = false;
+        var obj = {}
+        try {
+            obj = JSON.parse(ret)
+        }
+        catch (err) {
+            alertDlg.messageText = "通信失败，请检查网络";
+            alertDlg.show();
+            return;
+        }
+
         if (obj.code === 200 && obj.trust_level === 0) {
             pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
         }
         else {
             if (obj.code !== 200) {
-                alertDlg.messageText = "通信失败，请检查网络"
+                alertDlg.messageText = "通信失败，请检查网络";
             }
             else {
-                alertDlg.messageText = "您目前无权在移动端使用公文审批服务"
+                alertDlg.messageText = "您目前无权在移动端使用公文审批服务";
             }
-            alertDlg.show()
+            alertDlg.show();
         }
     }
 
