@@ -108,7 +108,7 @@ function selectNeedApprovalEvent(userID, status, callback) {
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
             console.log('response:' + httpRequest.responseText);
             if (callback) {
-                callback(httpRequest.responseText)
+                callback(httpRequest.responseText, status)
             }
         }
     }
@@ -118,6 +118,37 @@ function selectNeedApprovalEvent(userID, status, callback) {
 
     var url = server + interfacePath
     url += '?approvalUserID=' + userID
+    url += '&eventApprovalStatus=' + status
+    url = encodeURI(url)
+    httpRequest.open('POST', url)
+    httpRequest.send()
+
+    console.log(url)
+}
+
+function selectMeCreateApprovalEvent(userID, status, callback) {
+    var interfacePath = '/Approval/ApprovalController/selectMeCreateApprovalEvent.do'
+
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+            console.log("Headers -->");
+            console.log(httpRequest.getAllResponseHeaders ());
+            console.log("Last modified -->");
+            console.log(httpRequest.getResponseHeader ("Last-Modified"));
+        } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('response:' + httpRequest.responseText);
+            if (callback) {
+                callback(httpRequest.responseText, status)
+            }
+        }
+    }
+    httpRequest.onerror = function() {
+        console.log('error')
+    }
+
+    var url = server + interfacePath
+    url += '?eventCreateUserID=' + userID
     url += '&eventApprovalStatus=' + status
     url = encodeURI(url)
     httpRequest.open('POST', url)

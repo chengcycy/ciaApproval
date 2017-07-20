@@ -16,15 +16,15 @@ CPage{
     }
     onStatusChanged: {
         if (status === CPageStatus.WillShow) {
-//            if (myTabView.currentIndex === 0) {
-//                undeterminedList.loading = true
-//                approvalManager.undeterminedApprovalModel.reset();
-//            }
-//            else if (myTabView.currentIndex === 1) {
-//                determinedList.loading = true
-//                approvalManager.determinedApprovalModel.reset();
-//            }
-            ApprovalRequest.selectNeedApprovalEvent(currentID,
+            if (myTabView.currentIndex === 0) {
+                undeterminedList.loading = true
+                undeterminedApprovalModel.clear()
+            }
+            else if (myTabView.currentIndex === 1) {
+                determinedList.loading = true
+                determinedApprovalModel.clear()
+            }
+            ApprovalRequest.selectNeedApprovalEvent(mainApp.currentID,
                                                     myTabView.currentIndex,
                                                     onGetUndetermindList)
         }
@@ -252,20 +252,37 @@ CPage{
         }
     }
 
-    function onGetUndetermindList(ret) {
+    function onGetUndetermindList(ret, index) {
+        determinedList.loading = false
         var obj = JSON.parse(ret)
-        undeterminedApprovalModel.clear()
         if (obj.code === 1) {
-            for (var i = 0; i < obj.result.length; i++) {
-                var item = {};
-                item.approvalID = obj.result[i].eventID
-                item.targetName = obj.result[i].eventCreateUserInfo.userName
-                item.portrait = obj.result[i].eventCreateUserInfo.userPhotoUrl
-                item.approvalType = obj.result[i].eventApprovalType
-                item.approvalStatus = obj.result[i].eventApprovalStatus
-                item.time = Qt.formatDateTime(new Date(obj.result[i].eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
-                console.log(obj.result[i].eventApprovalEndTime + item.time)
-                undeterminedApprovalModel.append(item)
+            if (index === 0) {
+                undeterminedApprovalModel.clear()
+                for (var i = 0; i < obj.result.length; i++) {
+                    var item = {};
+                    item.approvalID = obj.result[i].eventID
+                    item.targetName = obj.result[i].eventCreateUserInfo.userName
+                    item.portrait = obj.result[i].eventCreateUserInfo.userPhotoUrl
+                    item.approvalType = obj.result[i].eventApprovalType
+                    item.approvalStatus = obj.result[i].eventApprovalStatus
+                    item.time = Qt.formatDateTime(new Date(obj.result[i].eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
+                    console.log(obj.result[i].eventApprovalEndTime + item.time)
+                    undeterminedApprovalModel.append(item)
+                }
+            }
+            else if (index === 1) {
+                undeterminedApprovalModel.clear()
+                for (var approval in obj.result) {
+                    var item = {};
+                    item.approvalID = approval.eventID
+                    item.targetName = approval.eventCreateUserInfo.userName
+                    item.portrait = approval.eventCreateUserInfo.userPhotoUrl
+                    item.approvalType = approval.eventApprovalType
+                    item.approvalStatus = approval.eventApprovalStatus
+                    item.time = Qt.formatDateTime(new Date(approval.eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
+                    console.log(approval.eventApprovalEndTime + item.time)
+                    undeterminedApprovalModel.append(item)
+                }
             }
         }
     }

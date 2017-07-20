@@ -430,21 +430,19 @@ CPage{
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (submitButton.enabled) {
-                            var createUser = {}
-                            createUser.userID = mainApp.currentID
-                            createUser.userName = mainApp.currentName
-                            createUser.userPhotoUrl = ''
-                            var approver = {}
-                            approver.userID = selectedUserID
-                            approver.userName = selectedName
-                            approver.userPhotoUrl = selectedPortrait
-                            ApprovalRequest.addNewApprovalEvent(approvalType,
-                                                                createUser, approver, approvalDescriptionContent.text, [],
-                                                                onSendResult)
-                            indicator.visible = true
-                            submitButtonEnabled = false
-                        }
+                        var createUser = {}
+                        createUser.userID = mainApp.currentID
+                        createUser.userName = mainApp.currentName
+                        createUser.userPhotoUrl = ''
+                        var approver = {}
+                        approver.userID = selectedUserID
+                        approver.userName = selectedName
+                        approver.userPhotoUrl = selectedPortrait
+                        ApprovalRequest.addNewApprovalEvent(approvalType,
+                                                            createUser, approver, approvalDescriptionContent.text, [],
+                                                            onSendResult)
+                        indicator.visible = true
+                        submitButtonEnabled = false
                     }
                 }
             }

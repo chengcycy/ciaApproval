@@ -143,24 +143,34 @@ CPage{
                             ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
                                 function onGetFileList(ret) {
                                     var arr = []
-                                    var obj = {}
-                                    obj.fileGUID = '1'
-                                    obj.fileName = 'LD会议纪要－0930.doc'
-                                    obj.filePage = 1
-                                    obj.fileOverTime = 1
-                                    obj.fileType = '.doc'
-                                    obj.isSelected = false
-                                    arr.push(obj)
+                                    var object = {}
+                                    object.fileGUID = '1'
+                                    object.fileName = 'LD会议纪要－0930.doc'
+                                    object.filePage = 1
+                                    object.fileOverTime = 1
+                                    object.fileType = '.doc'
+                                    object.isSelected = false
+                                    arr.push(object)
 
-                                    obj = {}
-                                    obj.fileGUID = '2'
-                                    obj.fileName = 'LD会议纪要－0930.pdf'
-                                    obj.filePage = 2
-                                    obj.fileOverTime = 1
-                                    obj.fileType = '.pdf'
-                                    obj.isSelected = false
-                                    arr.push(obj)
+                                    object = {}
+                                    object.fileGUID = '2'
+                                    object.fileName = 'LD会议纪要－0930.pdf'
+                                    object.filePage = 2
+                                    object.fileOverTime = 1
+                                    object.fileType = '.pdf'
+                                    object.isSelected = false
+                                    arr.push(object)
 
+                                    object = {}
+                                    object.fileGUID = '3'
+                                    object.fileName = 'LD会议纪要－0930.exe'
+                                    object.filePage = 3
+                                    object.fileOverTime = 1
+                                    object.fileType = '.exe'
+                                    object.isSelected = false
+                                    //arr.push(object)
+
+                                    var cbret = []
                                     for (var i = 0; i < documentsListModel.count; i++) {
                                         if (!documentsListModel.get(i).isSelected) {
                                             continue
@@ -173,12 +183,25 @@ CPage{
                                             }
                                         }
                                         if (!flag) {
-                                            alertDlg.filename = documentsListModel.get(i).fileName
+                                            alertDlg.filename =
+                                                    documentsListModel.get(i).fileName
                                             alertDlg.show()
+                                            documentsListModel.remove(i)
+                                            return
+                                        }
+                                        else {
+                                            var obj = {}
+                                            obj.fileGUID = documentsListModel.get(i).fileGUID
+                                            obj.fileName = documentsListModel.get(i).fileName
+                                            obj.filePage = documentsListModel.get(i).filePage
+                                            obj.fileOverTime = documentsListModel.get(i).fileOverTime
+                                            obj.fileType = documentsListModel.get(i).fileType
+                                            cbret.push(obj)
                                         }
                                     }
 
-                                    emit: callback({id:orgManager.id,name:orgManager.name});
+                                    emit: callback(arr);
+                                    pageStack.pop()
                                 }
                             )
                         }

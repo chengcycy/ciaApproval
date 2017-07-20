@@ -9,6 +9,8 @@ CPage{
     property string selectedUserID: ''
     property string selectedName: ''
     property string selectedPortrait: ''
+    property alias submitButtonEnabled: submitButton.enabled
+    property var docList: []
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -17,25 +19,9 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-    }
 
-    //    Connections {
-    //        target: approvalManager
-    //        onSendResult:{
-    //            if (result == "1")
-    //            {
-    //                gToast.requestToast("审批已提交","","");
-    //                approvalManager.selectedUserID = ''
-    //                approvalManager.selectedName = ''
-    //                approvalManager.selectedPortrait = ''
-    //                pageStack.pop()
-    //            }
-    //            else {
-    //                gToast.requestToast("发送失败","","");
-    //            }
-    //            indicator.visible = false
-    //        }
-    //    }
+        documentListModel.clear()
+    }
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -203,8 +189,13 @@ CPage{
                             return;
                         }
 
-                        pageStack.push(Qt.resolvedUrl('CDoodApprovalDocumentListPage.qml'),
+                        var component = pageStack.push(Qt.resolvedUrl('CDoodApprovalDocumentListPage.qml'),
                                        {selectedUserID: selectedUserID});
+                        component.callback.connect(function(ret) {
+                            for (var i = 0; i < ret.length; i++) {
+                                documentListModel.append(ret[i])
+                            }
+                        })
                     }
                 }
             }
@@ -334,7 +325,7 @@ CPage{
                                 orgNavBarManager.clear();
                                 orgNavBarManager.setNav(1,orgName);
                                 var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
-                                component.callback.connect(function(obj){
+                                component.callback.connect(function(obj) {
                                     console.log("id:"+obj.id+',name:'+obj.name);
                                     selectedUserID = obj.id;
                                     selectedName = obj.name;
@@ -376,7 +367,6 @@ CPage{
                 enabled: contextTextArea.length > 0
                          && approvalDocumentList.count > 0
                          && selectedUserID !== ''
-                         && !indicator.visible
 
                 color: enabled ? '#577EDD' : '#A2BCE8'
 
@@ -397,12 +387,33 @@ CPage{
                     id: submitArea
                     anchors.fill: parent
                     onClicked: {
-                        approvalManager.sendApproval(7,
-                                                     approvalDescriptionContent.text,
-                                                     userProfileManager.id,
-                                                     userProfileManager.name,
-                                                     userProfileManager.thumbAvatar)
+                        var createUser = {}
+                        createUser.userID = mainApp.currentID
+                        createUser.userName = mainApp.currentName
+                        createUser.userPhotoUrl = ''
+                        var approver = {}
+                        approver.userID = selectedUserID
+                        approver.userName = selectedName
+                        approver.userPhotoUrl = selectedPortrait
+                        ApprovalRequest.addNewApprovalEvent(7,
+                            createUser,
+                            approver,
+                            approvalDescriptionContent.text,
+                            docList,
+                            function (ret) {
+                                indicator.visible = false
+                                submitButtonEnabled = true
+                                var obj = JSON.parse(ret)
+                                if (obj.code === 1) {
+                                    gToast.requestToast("审批已提交","","");
+                                    pageStack.pop()
+                                }
+                                else {
+                                    gToast.requestToast("发送失败","","");
+                                }
+                            })
                         indicator.visible = true
+                        submitButtonEnabled = false
                     }
                 }
             }
