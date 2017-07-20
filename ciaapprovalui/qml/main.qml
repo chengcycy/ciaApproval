@@ -57,7 +57,7 @@ CPageStackWindow {
                         var staffList = data.staffList;
                         for(var i =0;i<staffList.length;++i){
                             var item = staffList[i];
-                            if((item.phone+'') === phone){
+                            if((item.phone+'') === phone&& (item.password+'') === passwd){
                                 mainApp.currentID = item.userID;
                                 mainApp.currentName = item.userName;
                                 pageStack.clear();
@@ -68,7 +68,7 @@ CPageStackWindow {
                         }
                     }
                     if(!loginOk){
-                        console.log('login err.');
+                       gToast.requestToast("账户不存在或密码错误！","","");
                     }
                 });
             });
