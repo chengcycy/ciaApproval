@@ -13,8 +13,9 @@ Rectangle{
         model: orgManager
         delegate:Item {
             id:contactListDelegate
+            visible: (''+model.modelData.id) !== mainApp.currentID
             width: parent.width
-            height: gUtill.dpH2(100*fp)
+            height: ((''+model.modelData.id) === mainApp.currentID)?0:gUtill.dpH2(100*fp)
             MouseArea {
                 anchors.fill: parent
 

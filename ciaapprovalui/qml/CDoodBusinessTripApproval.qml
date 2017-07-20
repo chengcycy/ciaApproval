@@ -338,6 +338,11 @@ CPage{
                     verticalAlignment: Text.AlignVCenter
                 }
 
+                CIndicatorDialog {
+                    id:loadingOrg
+                    messageText: os.i18n.ctr(qsTr("正在拉取数据..."))
+                    messageTextPixelSize:gUtill.dpH2(32);
+                }
                 CDoodHeaderImage {
                     id: addApproverIcon
 
@@ -359,6 +364,7 @@ CPage{
 
                         anchors.fill: parent
                         onClicked: {
+                            loadingOrg.show();
                             ApprovalRequest.getContactsJSONFile(function(resp){
                                 console.log('=================================contact:'+resp);
                                 orgManager.resetDataFromJson(resp);
@@ -366,6 +372,7 @@ CPage{
 
                                 orgNavBarManager.clear();
                                 orgNavBarManager.setNav(1,orgName);
+                                loadingOrg.hide();
                                 var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
                                 component.callback.connect(function(obj){
                                     console.log("id:"+obj.id+',name:'+obj.name);
