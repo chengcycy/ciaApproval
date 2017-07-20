@@ -427,30 +427,28 @@ CPage{
                 MouseArea {
                     anchors.fill: parent
                     onClicked: {
-                        if (submitButton.enabled) {
-                            var content = {}
-                            content.begin_date = startTimeButton.rigthText
-                            content.end_date = endTimeButton.rigthText
-                            content.pos_change_to = siteInputTextArea.text
-                            content.outReaSon = businessTripReasonContentTextArea.text
-                            var createUser = {}
-                            createUser.userID = selectedUserID
-                            createUser.userName = selectedName
-                            createUser.userPhotoUrl = selectedPortrait
-                            var approver = {}
-                            approver.userID = selectedUserID
-                            approver.userName = selectedName
-                            approver.userPhotoUrl = selectedPortrait
-                            ApprovalRequest.addNewApprovalEvent(8,
-                                                                createUser,
-                                                                approver,
-                                                                JSON.stringify(content),
-                                                                [],
-                                                                onSendResult)
+                        var content = {}
+                        content.begin_date = startTimeButton.rigthText
+                        content.end_date = endTimeButton.rigthText
+                        content.pos_change_to = siteInputTextArea.text
+                        content.outReaSon = businessTripReasonContentTextArea.text
+                        var createUser = {}
+                        createUser.userID = selectedUserID
+                        createUser.userName = selectedName
+                        createUser.userPhotoUrl = selectedPortrait
+                        var approver = {}
+                        approver.userID = selectedUserID
+                        approver.userName = selectedName
+                        approver.userPhotoUrl = selectedPortrait
+                        ApprovalRequest.addNewApprovalEvent(8,
+                                                            createUser,
+                                                            approver,
+                                                            JSON.stringify(content),
+                                                            [],
+                                                            onSendResult)
 
-                            indicator.visible = true
-                            submitButtonEnabled = false
-                        }
+                        indicator.visible = true
+                        submitButtonEnabled = false
                     }
                 }
             }

@@ -1,9 +1,11 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import "../"
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: initiatedApprovalPage
+
+    property real scale: 1.92
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -15,13 +17,44 @@ CPage{
     }
     onStatusChanged: {
         if (status === CPageStatus.WillShow) {
-            approvalManager.initiatedApprovalModel.reset();
-            approvalManager.getApprovalList(userProfileManager.id)
+            initiatedApprovalModel.clear()
             initiatedApprovalList.loading = true
+            ApprovalRequest.selectMeCreateApprovalEvent(mainApp.currentID, 0,
+                function(ret, index) {
+                    var obj = JSON.parse(ret)
+                    if (obj.code === 1) {
+                        for (var approval in obj.result) {
+                            var item = {};
+                            item.approvalID = approval.eventID
+                            item.targetName = approval.eventCreateUserInfo.userName
+                            item.portrait = approval.eventCreateUserInfo.userPhotoUrl
+                            item.approvalType = approval.eventApprovalType
+                            item.approvalStatus = approval.eventApprovalStatus
+                            item.time = Qt.formatDateTime(new Date(approval.eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
+                            console.log(approval.eventApprovalEndTime + item.time)
+                            initiatedApprovalModel.append(item)
+                        }
+                        ApprovalRequest.selectMeCreateApprovalEvent(mainApp.currentID, 1,
+                            function(ret, index) {
+                                var obj = JSON.parse(ret)
+                                if (obj.code === 1) {
+                                    for (var approval in obj.result) {
+                                        var item = {};
+                                        item.approvalID = approval.eventID
+                                        item.targetName = approval.eventCreateUserInfo.userName
+                                        item.portrait = approval.eventCreateUserInfo.userPhotoUrl
+                                        item.approvalType = approval.eventApprovalType
+                                        item.approvalStatus = approval.eventApprovalStatus
+                                        item.time = Qt.formatDateTime(new Date(approval.eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
+                                        console.log(approval.eventApprovalEndTime + item.time)
+                                        initiatedApprovalModel.append(item)
+                                    }
+                                }
+                            })
+                    }
+                })
         }
     }
-
-    property real scale: 1.92
 
     contentAreaItem: Item {
         anchors.fill: parent
@@ -169,10 +202,22 @@ CPage{
                 width: parent.width
                 anchors.top: titleArea.bottom
                 anchors.bottom: parent.bottom
-                model: approvalManager.initiatedApprovalModel
+                model: initiatedApprovalModel
                 loading: true
                 listType: 1
             }
+        }
+    }
+
+    ListModel {
+        id: initiatedApprovalModel
+        ListElement {
+            approvalID: 1
+            targetName: '1'
+            portrait: '1'
+            approvalType: 1
+            approvalStatus: 1
+            time: '1'
         }
     }
 }

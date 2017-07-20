@@ -72,7 +72,7 @@ Item {
                     leftMargin: gUtill.dpW2(13.5 * approvalListView.scale)
                     verticalCenter: parent.verticalCenter
                 }
-                iconSource: setIcon('1', /*model.modelData.*/portrait)
+                iconSource: setIcon('1', portrait)
             }
 
             Text {
@@ -87,7 +87,7 @@ Item {
                     right: approvalStatusFlagIcon.left
                 }
 
-                text: /*model.modelData.*/targetName + '的' + typeList[/*model.modelData.*/approvalType]
+                text: targetName + '的' + typeList[approvalType]
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(18 * approvalListView.scale)
                 color: '#545454'
@@ -104,10 +104,10 @@ Item {
                     top: approvalName.bottom
                 }
 
-                text: getStatusString(/*model.modelData.*/approvalStatus)
+                text: getStatusString(approvalStatus)
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(12.5 * approvalListView.scale)
-                color: getStatusStringColor(/*model.modelData.*/approvalStatus)
+                color: getStatusStringColor(approvalStatus)
                 verticalAlignment: Qt.AlignVCenter
             }
 
@@ -123,7 +123,7 @@ Item {
                     bottomMargin: gUtill.dpH2(15.5 * approvalListView.scale)
                 }
 
-                text: /*model.modelData.*/time
+                text: time
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(10 * approvalListView.scale)
                 color: '#999999'
@@ -140,7 +140,7 @@ Item {
                 sourceSize.width: gUtill.dpW2(20 * approvalListView.scale)
                 sourceSize.height: gUtill.dpH2(20 * approvalListView.scale)
 
-                source: getStatusFlagIcon(/*model.modelData.*/approvalStatus)
+                source: getStatusFlagIcon(approvalStatus)
                 fillMode: Image.PreserveAspectFit
             }
 
@@ -160,7 +160,7 @@ Item {
                 id: mouseareaDelegate
                 anchors.fill: parent
                 onClicked: {//undeterminedApprovalPage
-                    approvalManager.setDetailItem(/*model.modelData.*/approvalID,
+                    approvalManager.setDetailItem(approvalID,
                                                   approvalListView.listType)
                     pageStack.push(Qt.resolvedUrl('CDoodApprovalDetailsPage.qml'), {
                                        buttonVisible: approvalListView.buttonVisible,
