@@ -96,7 +96,7 @@ Item {
             }
 
             Text {
-                id: approvalStatus
+                id: approvalStatusText
 
                 height: gUtill.dpH2(17 * approvalListView.scale)
                 anchors {

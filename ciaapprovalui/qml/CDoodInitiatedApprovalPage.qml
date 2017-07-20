@@ -20,39 +20,7 @@ CPage{
             initiatedApprovalModel.clear()
             initiatedApprovalList.loading = true
             ApprovalRequest.selectMeCreateApprovalEvent(mainApp.currentID, 0,
-                function(ret, index) {
-                    var obj = JSON.parse(ret)
-                    if (obj.code === 1) {
-                        for (var approval in obj.result) {
-                            var item = {};
-                            item.approvalID = approval.eventID
-                            item.targetName = approval.eventCreateUserInfo.userName
-                            item.portrait = approval.eventCreateUserInfo.userPhotoUrl
-                            item.approvalType = approval.eventApprovalType
-                            item.approvalStatus = approval.eventApprovalStatus
-                            item.time = Qt.formatDateTime(new Date(approval.eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
-                            console.log(approval.eventApprovalEndTime + item.time)
-                            initiatedApprovalModel.append(item)
-                        }
-                        ApprovalRequest.selectMeCreateApprovalEvent(mainApp.currentID, 1,
-                            function(ret, index) {
-                                var obj = JSON.parse(ret)
-                                if (obj.code === 1) {
-                                    for (var approval in obj.result) {
-                                        var item = {};
-                                        item.approvalID = approval.eventID
-                                        item.targetName = approval.eventCreateUserInfo.userName
-                                        item.portrait = approval.eventCreateUserInfo.userPhotoUrl
-                                        item.approvalType = approval.eventApprovalType
-                                        item.approvalStatus = approval.eventApprovalStatus
-                                        item.time = Qt.formatDateTime(new Date(approval.eventApprovalEndTime).toString('MM/dd  hh:mm:ss'))
-                                        console.log(approval.eventApprovalEndTime + item.time)
-                                        initiatedApprovalModel.append(item)
-                                    }
-                                }
-                            })
-                    }
-                })
+                                                        onGetInitiatedList)
         }
     }
 
@@ -112,7 +80,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * initiatedApprovalPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * initiatedApprovalPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res//approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -173,7 +141,7 @@ CPage{
                     searchLabelEnabled: true
                     searchLabelLeftMargin: gUtill.dpW2(130 * initiatedApprovalPage.scale)
                     searchLabelRightMargin: 0
-                    searchLabelIcon: 'qrc:/res/newUi/approval/ic_search_nor.png'
+                    searchLabelIcon: 'qrc:/res//approval/ic_search_nor.png'
                     placeholderText: qsTr("搜索")
                     placeholderTextItem.color: '#475883'
                     placeholderTextItem.font.family: 'PingFangSC-Regular'
@@ -218,6 +186,31 @@ CPage{
             approvalType: 1
             approvalStatus: 1
             time: '1'
+        }
+    }
+
+    function onGetInitiatedList(ret, index) {
+        var obj = JSON.parse(ret)
+        if (obj.code === 1) {
+            for (var i = 0; i < obj.result.length; i++) {
+                console.log('initiatedApprovalModel ' + JSON.stringify(obj.result[i]))
+                var item = {};
+                item.approvalID = obj.result[i].eventID
+                item.targetName = obj.result[i].eventCreateUserInfo.userName
+                item.portrait = obj.result[i].eventCreateUserInfo.userPhotoUrl
+                item.approvalType = obj.result[i].eventApprovalType
+                item.approvalStatus = obj.result[i].eventApprovalStatus
+                item.time = Qt.formatDateTime(new Date(obj.result[i].eventCreateTime), 'MM/dd  hh:mm:ss')
+                initiatedApprovalModel.append(item)
+            }
+
+            if (index === 0) {
+                ApprovalRequest.selectMeCreateApprovalEvent(mainApp.currentID, 1,
+                                                            onGetInitiatedList)
+            }
+            else if (index === 1) {
+                initiatedApprovalList.loading = false
+            }
         }
     }
 }
