@@ -64,7 +64,7 @@ Item {
             anchors.top: titleArea.bottom
             sourceSize.width: width
             sourceSize.height: height
-            source: 'qrc:/res/newUi/Rectangle.png'
+            source: 'qrc:/res/Rectangle.png'
         }
 
         GridView {

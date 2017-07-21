@@ -20,32 +20,16 @@ CPage{
         documentsListModel.clear()
         ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
             function onGetFileList(ret) {
-                var obj = {}
-                obj.fileGUID = '1'
-                obj.fileName = 'LD会议纪要－0930.doc'
-                obj.filePage = 1
-                obj.fileOverTime = 1
-                obj.fileType = '.doc'
-                obj.isSelected = false
-                documentsListModel.append(obj)
-
-                obj = {}
-                obj.fileGUID = '2'
-                obj.fileName = 'LD会议纪要－0930.pdf'
-                obj.filePage = 2
-                obj.fileOverTime = 1
-                obj.fileType = '.pdf'
-                obj.isSelected = false
-                documentsListModel.append(obj)
-
-                obj = {}
-                obj.fileGUID = '3'
-                obj.fileName = 'LD会议纪要－0930.exe'
-                obj.filePage = 3
-                obj.fileOverTime = 1
-                obj.fileType = '.exe'
-                obj.isSelected = false
-                documentsListModel.append(obj)
+                var obj = JSON.parse(ret)
+                for (var i = 0; i < ret.length; i++) {
+                    obj.fileGUID = ret[i].fileGUID
+                    obj.fileName = ret[i].fileName
+                    obj.filePage = ret[i].filePage
+                    obj.fileOverTime = ret[i].fileOverTime
+                    obj.fileType = ret[i].fileType
+                    obj.isSelected = false
+                    documentsListModel.append(obj)
+                }
 
                 if (documentsListModel.count === 0) {
                     alertDlg.messageText = '您的权限不够，获取不到文件列表'
@@ -143,34 +127,7 @@ CPage{
                             ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
                                 function onGetFileList(ret) {
                                     var arr = []
-                                    var object = {}
-                                    object.fileGUID = '1'
-                                    object.fileName = 'LD会议纪要－0930.doc'
-                                    object.filePage = 1
-                                    object.fileOverTime = 1
-                                    object.fileType = '.doc'
-                                    object.isSelected = false
-                                    arr.push(object)
-
-                                    object = {}
-                                    object.fileGUID = '2'
-                                    object.fileName = 'LD会议纪要－0930.pdf'
-                                    object.filePage = 2
-                                    object.fileOverTime = 1
-                                    object.fileType = '.pdf'
-                                    object.isSelected = false
-                                    arr.push(object)
-
-                                    object = {}
-                                    object.fileGUID = '3'
-                                    object.fileName = 'LD会议纪要－0930.exe'
-                                    object.filePage = 3
-                                    object.fileOverTime = 1
-                                    object.fileType = '.exe'
-                                    object.isSelected = false
-                                    //arr.push(object)
-
-                                    var cbret = []
+                                    var cbret = JSON.parse(ret)
                                     for (var i = 0; i < documentsListModel.count; i++) {
                                         if (!documentsListModel.get(i).isSelected) {
                                             continue
@@ -178,16 +135,16 @@ CPage{
 
                                         var flag = false;
                                         for (var j = 0; j < arr.length; j++) {
-                                            if(documentsListModel.get(i).fileGUID === arr[j].fileGUID) {
+                                            if(documentsListModel.get(i).fileGUID === cbret[j].fileGUID) {
                                                 flag = true;
                                             }
                                         }
                                         if (!flag) {
                                             alertDlg.filename =
-                                                    documentsListModel.get(i).fileName
-                                            alertDlg.show()
-                                            documentsListModel.remove(i)
-                                            return
+                                                    documentsListModel.get(i).fileName;
+                                            alertDlg.show();
+                                            documentsListModel.remove(i);
+                                            return;
                                         }
                                         else {
                                             var obj = {}
@@ -196,7 +153,7 @@ CPage{
                                             obj.filePage = documentsListModel.get(i).filePage
                                             obj.fileOverTime = documentsListModel.get(i).fileOverTime
                                             obj.fileType = documentsListModel.get(i).fileType
-                                            cbret.push(obj)
+                                            arr.push(obj)
                                         }
                                     }
 

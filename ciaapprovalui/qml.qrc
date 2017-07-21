@@ -28,5 +28,6 @@
         <file>qml/CDoodTabViewEnterStyle.qml</file>
         <file>qml/UserProfileButton.qml</file>
         <file>qml/CDoodListDialog.qml</file>
+        <file>qml/CDoodPopWndLayer.qml</file>
     </qresource>
 </RCC>

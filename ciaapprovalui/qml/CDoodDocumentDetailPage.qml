@@ -7,6 +7,7 @@ CPage{
 
     property real scale: 1.92
     property int page: 1
+    property var currentDoc: ({})
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -42,7 +43,7 @@ CPage{
                     anchors.top: parent.top
                     anchors.topMargin: gUtill.dpH2(30 * documentDetailPage.scale)
 
-                    text: approvalManager.documentDetail.name
+                    text: currentDoc.fileName
                     font.family: 'PingFangSC-Regular'
                     font.pixelSize: gUtill.dpH2(17 * documentDetailPage.scale)
                     color: 'white'
@@ -73,7 +74,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * documentDetailPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * documentDetailPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -116,23 +117,11 @@ CPage{
                 }
 
                 Component.onCompleted: {
-                    for (var i = 1; i <= approvalManager.documentDetail.pageSize;
+                    for (var i = 1; i <= currentDoc.pageSize;
                          i++)
                     {
-                        documentContent.addPage(approvalManager.documentDetail.path + '&pageNum=' + i)
+                        documentContent.addPage(currentDoc.filePath + '&pageNum=' + i)
                     }
-                }
-
-                Image {
-                    id: confidentialityIcon
-                    width: gUtill.dpW2(52.2 * documentDetailPage.scale)
-                    height: gUtill.dpH2(51.3 * documentDetailPage.scale)
-                    anchors.top: parent
-                    anchors.right: parent.right
-                    sourceSize.width: gUtill.dpW2(52.2 * documentDetailPage.scale)
-                    sourceSize.height: gUtill.dpH2(51.3 * documentDetailPage.scale)
-                    source: 'qrc:/res/newUi/approval/Corner_Confidential.png'
-                    fillMode: Image.PreserveAspectFit
                 }
             }
 
@@ -145,7 +134,7 @@ CPage{
                 anchors.bottomMargin: gUtill.dpH2(10 * documentDetailPage.scale)
                 anchors.horizontalCenter: parent.horizontalCenter
 
-                text: '< ' + documentDetailPage.page + '/' + approvalManager.documentDetail.pageSize + ' >'
+                text: '< ' + documentDetailPage.page + '/' + currentDoc.pageSize + ' >'
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(15 * documentDetailPage.scale)
                 color: '#030303'

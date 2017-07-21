@@ -10,7 +10,6 @@ CPage{
     property string selectedName: ''
     property string selectedPortrait: ''
     property alias submitButtonEnabled: submitButton.enabled
-    property var docList: []
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -394,6 +393,9 @@ CPage{
                     id: submitArea
                     anchors.fill: parent
                     onClicked: {
+                        indicator.visible = true
+                        submitButtonEnabled = false
+
                         var createUser = {}
                         createUser.userID = mainApp.currentID
                         createUser.userName = mainApp.currentName
@@ -402,6 +404,17 @@ CPage{
                         approver.userID = selectedUserID
                         approver.userName = selectedName
                         approver.userPhotoUrl = selectedPortrait
+                        var docList = []
+                        for (var i = 0; i < documentListModel.count; i++) {
+                            console.log('item: ' + JSON.stringify(documentListModel.get(i)))
+                            var item = {}
+                            item.fileGUID = documentListModel.get(i).fileGUID
+                            item.fileName = documentListModel.get(i).fileName
+                            item.filePage = documentListModel.get(i).filePage
+                            item.fileOverTime = documentListModel.get(i).fileOverTime
+                            item.fileType = documentListModel.get(i).fileType
+                            docList.push(item)
+                        }
                         ApprovalRequest.addNewApprovalEvent(7,
                             createUser,
                             approver,
@@ -410,7 +423,15 @@ CPage{
                             function (ret) {
                                 indicator.visible = false
                                 submitButtonEnabled = true
-                                var obj = JSON.parse(ret)
+
+                                try {
+                                    var obj = JSON.parse(ret)
+                                }
+                                catch (err) {
+                                    gToast.requestToast("发送失败","","");
+                                    return;
+                                }
+
                                 if (obj.code === 1) {
                                     gToast.requestToast("审批已提交","","");
                                     pageStack.pop()
@@ -419,8 +440,6 @@ CPage{
                                     gToast.requestToast("发送失败","","");
                                 }
                             })
-                        indicator.visible = true
-                        submitButtonEnabled = false
                     }
                 }
             }

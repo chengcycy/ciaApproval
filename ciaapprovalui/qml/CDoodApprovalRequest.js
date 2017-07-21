@@ -157,6 +157,36 @@ function selectMeCreateApprovalEvent(userID, status, callback) {
     console.log(url)
 }
 
+function showHasApprovalDetial(eventID, callback) {
+    var interfacePath = '/Approval/ApprovalController/showHasApprovalDetial.do'
+
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+            console.log("Headers -->");
+            console.log(httpRequest.getAllResponseHeaders ());
+            console.log("Last modified -->");
+            console.log(httpRequest.getResponseHeader ("Last-Modified"));
+        } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('response:' + httpRequest.responseText);
+            if (callback) {
+                callback(httpRequest.responseText)
+            }
+        }
+    }
+    httpRequest.onerror = function() {
+        console.log('error')
+    }
+
+    var url = server + interfacePath
+    url += '?eventID=' + eventID
+    url = encodeURI(url)
+    httpRequest.open('POST', url)
+    httpRequest.send()
+
+    console.log(url)
+}
+
 function secFileGetList(userID, approverID, callback) {
     var interfacePath = '/Approval/ApprovalController/secFileGetList.do'
 
@@ -181,6 +211,43 @@ function secFileGetList(userID, approverID, callback) {
     var url = server + interfacePath
     url += '?userID=' + userID
     url += '&approvalUserID=' + approverID
+    url = encodeURI(url)
+    httpRequest.open('POST', url)
+    httpRequest.send()
+
+    console.log(url)
+}
+
+function updateApprovalEventStatus(eventID, approvalID, approvalUserID, approvalStatus,
+                                   approvalOpinion, nextApprovalUser, fileIDs, callback) {
+    var interfacePath = '/Approval/ApprovalController/updateApprovalEventStatus.do'
+
+    var httpRequest = new XMLHttpRequest()
+    httpRequest.onreadystatechange = function() {
+        if (httpRequest.readyState === XMLHttpRequest.HEADERS_RECEIVED) {
+            console.log("Headers -->");
+            console.log(httpRequest.getAllResponseHeaders ());
+            console.log("Last modified -->");
+            console.log(httpRequest.getResponseHeader ("Last-Modified"));
+        } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('response:' + httpRequest.responseText);
+            if (callback) {
+                callback(httpRequest.responseText)
+            }
+        }
+    }
+    httpRequest.onerror = function() {
+        console.log('error')
+    }
+
+    var url = server + interfacePath
+    url += '?eventID=' + eventID
+    url += '&approvalID=' + approvalID
+    url += '&approvalUserID=' + approvalUserID
+    url += '&approvalStatus=' + approvalStatus
+    url += '&approvalOpinion=' + approvalOpinion
+    url += '&nextApprovalUser=' + JSON.stringify(nextApprovalUser)
+    url += '&fileIDs=' + fileIDs
     url = encodeURI(url)
     httpRequest.open('POST', url)
     httpRequest.send()

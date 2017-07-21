@@ -1,12 +1,17 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../' as Com
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: approvalTranspondPage
 
     property var  undeterminedApprovalPageId
     property real scale: 1.92
+    property string selectedUserID: ''
+    property string selectedName: ''
+    property string selectedPortrait: ''
+    property var approvalID
+    signal callback(var json)
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -15,27 +20,6 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-
-        approvalManager.selectedUserID = ''
-        approvalManager.selectedName = ''
-        approvalManager.selectedPortrait = ''
-    }
-
-    Connections {
-        target: approvalManager
-        onDealResult: {
-            indicator.visible = false
-            if (result == 1) {
-                approvalManager.getApprovalDetail()
-                approvalManager.selectedUserID = ''
-                approvalManager.selectedName = ''
-                approvalManager.selectedPortrait = ''
-                pageStack.pop()
-            }
-            else {
-                gToast.requestToast('处理失败');
-            }
-        }
     }
 
     contentAreaItem: Item {
@@ -94,7 +78,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * approvalTranspondPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * approvalTranspondPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -161,7 +145,7 @@ CPage{
                     verticalAlignment: Text.AlignVCenter
                 }
 
-                Com.CDoodHeaderImage {
+                CDoodHeaderImage {
                     id: addApproverIcon
 
                     width: gUtill.dpW2(45 * approvalTranspondPage.scale)
@@ -173,15 +157,32 @@ CPage{
                         leftMargin: gUtill.dpW2(15 * approvalTranspondPage.scale)
                     }
 
-                    iconSource: approvalManager.selectedUserID ==='' ?
-                                    setIcon('1', 'qrc:/res/newUi/approval/ic_add.png') :
-                                    setIcon('1', approvalManager.selectedPortrait)
+                    iconSource: selectedUserID ==='' ?
+                                    setIcon('1', 'qrc:/res/approval/ic_add.png') :
+                                    setIcon('1', selectedPortrait)
 
                     MouseArea {
                         id: mouseareaAddApprover
 
                         anchors.fill: parent
-                        onClicked: pageStack.push(Qt.resolvedUrl('../group/GroupAddMainPage.qml'), {isApproval: true});
+                        onClicked: {
+                            loadingOrg.show();
+                            ApprovalRequest.getContactsJSONFile(function(resp){
+                                console.log('=================================contact:'+resp);
+                                orgManager.resetDataFromJson(resp);
+                                var orgName = orgManager.nameById(1);
+
+                                orgNavBarManager.clear();
+                                orgNavBarManager.setNav(1,orgName);
+                                loadingOrg.hide();
+                                var component = pageStack.push(Qt.resolvedUrl('./enterprise/SelectApprovalUser.qml'));
+                                component.callback.connect(function(obj) {
+                                    console.log("id:"+obj.id+',name:'+obj.name);
+                                    selectedUserID = obj.id;
+                                    selectedName = obj.name;
+                                });
+                            });
+                        }
                     }
                 }
 
@@ -248,7 +249,7 @@ CPage{
                 height: gUtill.dpH2(49 * approvalTranspondPage.scale)
                 anchors.bottom: parent.bottom
                 color: enabled ? '#577EDD' : '#A2BCE8'
-                enabled: approvalManager.selectedUserID !== ''
+                enabled: selectedUserID !== ''
                          && !indicator.visible
 
                 Text {
@@ -264,7 +265,34 @@ CPage{
                     id: buttonArea
                     anchors.fill: parent
                     onClicked: {
-                        approvalManager.dealApproval('3', approvalOpinionText.text)
+                        var approver = {}
+                        approver.userID = selectedUserID
+                        approver.userName = selectedName
+                        approver.userPhotoUrl = selectedPortrait
+                        ApprovalRequest.updateApprovalEventStatus(approvalID, 0,
+                            mainApp.currentID, 3, approvalOpinionText.text, approver, [],
+                            function(ret) {
+                                indicator.visible = false
+
+                                try {
+                                    var obj = JSON.parse(ret)
+                                }
+                                catch (err) {
+                                    gToast.requestToast("处理失败");
+                                    return;
+                                }
+
+                                if (obj.code === 1) {
+                                    ApprovalRequest.showHasApprovalDetial(approvalID,
+                                        function(ret) {
+                                            emit: callback(ret);
+                                        })
+                                    pageStack.pop()
+                                }
+                                else {
+                                    gToast.requestToast('处理失败');
+                                }
+                            })
                         indicator.visible = true
                     }
                 }
@@ -274,6 +302,12 @@ CPage{
                 id: indicator
                 anchors.centerIn: parent
                 visible: false
+            }
+
+            CIndicatorDialog {
+                id:loadingOrg
+                messageText: os.i18n.ctr(qsTr("正在拉取数据..."))
+                messageTextPixelSize:gUtill.dpH2(32);
             }
         }
     }

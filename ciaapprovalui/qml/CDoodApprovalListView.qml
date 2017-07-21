@@ -160,11 +160,12 @@ Item {
                 id: mouseareaDelegate
                 anchors.fill: parent
                 onClicked: {//undeterminedApprovalPage
-                    approvalManager.setDetailItem(approvalID,
-                                                  approvalListView.listType)
+//                    approvalManager.setDetailItem(approvalID,
+//                                                  approvalListView.listType)
                     pageStack.push(Qt.resolvedUrl('CDoodApprovalDetailsPage.qml'), {
                                        buttonVisible: approvalListView.buttonVisible,
-                                       parentId: approvalListView.parentId
+                                       parentId: approvalListView.parentId,
+                                       currentApproval: approvalListView.model.get(index)
                                    });
                 }
             }

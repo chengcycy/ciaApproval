@@ -1,12 +1,13 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../'
+import 'CDoodApprovalRequest.js' as ApprovalRequest
 
 CPage{
     id: approvalRejectPage
 
     property real scale: 1.92
-    property var  undeterminedApprovalPageId
+    property var undeterminedApprovalPageId
+    property var approvalID
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -15,19 +16,6 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-    }
-
-    Connections {
-        target: approvalManager
-        onDealResult: {
-            indicator.visible = false
-            if (result == 1) {
-                pageStack.pop(undeterminedApprovalPageId)
-            }
-            else {
-                gToast.requestToast('处理失败');
-            }
-        }
     }
 
     contentAreaItem: Item {
@@ -86,7 +74,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * approvalRejectPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * approvalRejectPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -193,7 +181,26 @@ CPage{
                     id: buttonArea
                     anchors.fill: parent
                     onClicked: {
-                        approvalManager.dealApproval('-1', approvalOpinionText.text)
+                        ApprovalRequest.updateApprovalEventStatus(approvalID, 0,
+                            mainApp.currentID, -1, approvalOpinionText.text, {}, [],
+                            function(ret) {
+                                indicator.visible = false
+
+                                try {
+                                    var obj = JSON.parse(ret)
+                                }
+                                catch (err) {
+                                    gToast.requestToast("处理失败");
+                                    return;
+                                }
+
+                                if (obj.code === 1) {
+                                    pageStack.pop(undeterminedApprovalPageId)
+                                }
+                                else {
+                                    gToast.requestToast('处理失败');
+                                }
+                            })
                         indicator.visible = true
                     }
                 }

@@ -180,12 +180,15 @@ CPage{
     ListModel {
         id: initiatedApprovalModel
         ListElement {
-            approvalID: 1
-            targetName: '1'
-            portrait: '1'
-            approvalType: 1
-            approvalStatus: 1
-            time: '1'
+            approvalID: 0
+            targetName: ''
+            portrait: ''
+            approvalType: 0
+            approvalStatus: 0
+            content: ''
+            time: ''
+            attachmentsList: ''
+            statusList: ''
         }
     }
 
@@ -200,7 +203,10 @@ CPage{
                 item.portrait = obj.result[i].eventCreateUserInfo.userPhotoUrl
                 item.approvalType = obj.result[i].eventApprovalType
                 item.approvalStatus = obj.result[i].eventApprovalStatus
+                item.content = obj.result[i].eventContent
                 item.time = Qt.formatDateTime(new Date(obj.result[i].eventCreateTime), 'MM/dd  hh:mm:ss')
+                item.attachmentsList = JSON.stringify(obj.result[i].attachmentTables)
+                item.statusList = JSON.stringify(obj.result[i].eventApprovals)
                 initiatedApprovalModel.append(item)
             }
 

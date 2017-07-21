@@ -76,7 +76,7 @@ CPage {
                 anchors.leftMargin: gUtill.dpW(17*fp)/*srvLineEdit.text ==="" ? 50 : 0*/
                 anchors.rightMargin: gUtill.dpW(35*fp)
 
-                text:'15829282344'
+                text:'13700000002'
 
                 height: gUtill.dpH(58*fp)
                 passwordLabelEnabled: false

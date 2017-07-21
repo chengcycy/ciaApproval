@@ -73,7 +73,7 @@ CPage {
 
                     sourceSize.width: gUtill.dpW2(23.04*fp)
                     sourceSize.height: gUtill.dpH2(38.4*fp)
-                    source: 'qrc:/res/newUi/approval/ic_back.png'
+                    source: 'qrc:/res/approval/ic_back.png'
                     fillMode: Image.PreserveAspectFit
                 }
 
@@ -113,7 +113,7 @@ CPage {
 
                 Image {
                     id: img_sch
-                    source: "qrc:/res/newUi/ic_search_focus@1.5x.png"
+                    source: "qrc:/res/ic_search_focus@1.5x.png"
                     anchors.left: parent.left
                     anchors.leftMargin: parent.width / 2 - gUtill.dpW2(60*fp)
                     anchors.verticalCenter: parent.verticalCenter

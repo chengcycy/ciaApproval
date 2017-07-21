@@ -1,6 +1,5 @@
 import QtQuick 2.0
 import com.syberos.basewidgets 2.0
-import '../'
 
 CPage{
     id: approvalDetailPage
@@ -9,6 +8,7 @@ CPage{
     property bool buttonVisible: false
     property var typeList: [qsTr("通用审批"),qsTr("报销审批"),qsTr("请假审批"),qsTr("出差审批"),qsTr("外出审批"),qsTr("采购审批"),qsTr("转正审批")/*,qsTr("调休审批")*/,qsTr("公文审批"),qsTr("出差审批")]
     property var parentId
+    property var currentApproval: ({})
 
     statusBarHoldEnabled: false
     Component.onCompleted: {
@@ -17,24 +17,10 @@ CPage{
 
         //设置状态栏样式，取值为"black"，"white"，"transwhite"和"transblack"
         gScreenInfo.setStatusBarStyle("transwhite");
-    }
 
-    Connections {
-        target: approvalManager
-        onDealResult: {
-            if (result == 1) {
-                buttonVisible = false
-            }
-        }
-        onCheckResult: {
-            if (pass){
-                pageStack.push(Qt.resolvedUrl('CDoodDocumentDetailPage.qml'))
-            }
-            else{
-                alertDlg.filename = approvalManager.documentDetail.name
-                alertDlg.show()
-            }
-        }
+        approvalAttachmentModel.clear()
+        approvalStatusModel.clear()
+        loadData()
     }
 
     contentAreaItem: Item {
@@ -62,7 +48,7 @@ CPage{
                     anchors.top: parent.top
                     anchors.topMargin: gUtill.dpH2(30 * approvalDetailPage.scale)
 
-                    text: typeList[approvalManager.detailType]
+                    text: typeList[currentApproval.approvalType]
                     font.family: 'PingFangSC-Regular'
                     font.pixelSize: gUtill.dpH2(17 * approvalDetailPage.scale)
                     color: 'white'
@@ -93,7 +79,7 @@ CPage{
 
                         sourceSize.width: gUtill.dpW2(12 * approvalDetailPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * approvalDetailPage.scale)
-                        source: 'qrc:/res/newUi/approval/ic_back.png'
+                        source: 'qrc:/res/approval/ic_back.png'
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -174,7 +160,7 @@ CPage{
                             leftMargin: gUtill.dpW2(12.5 * approvalDetailPage.scale)
                             verticalCenter: parent.verticalCenter
                         }
-                        iconSource: setIcon('1', approvalManager.detailPortrait)
+                        iconSource: setIcon('1', currentApproval.portrait)
                     }
 
                     Text {
@@ -189,7 +175,8 @@ CPage{
                             right: approvalStatusFlagIcon.left
                         }
 
-                        text: approvalManager.detailName + '的'+ typeList[approvalManager.detailType] +'申请'
+                        text: currentApproval.targetName + '的'
+                              + typeList[currentApproval.approvalType] +'申请'
                         font.family: 'PingFangSC-Regular'
                         font.pixelSize: gUtill.dpH2(18 * approvalDetailPage.scale)
                         color: '#545454'
@@ -207,7 +194,7 @@ CPage{
                             top: approvalName.bottom
                         }
 
-                        text: '编号：' + approvalManager.detailID
+                        text: '编号：' + currentApproval.approvalID
                         font.family: 'PingFangSC-Regular'
                         font.pixelSize: gUtill.dpH2(12.5 * approvalDetailPage.scale)
                         color: '#999999'
@@ -224,10 +211,10 @@ CPage{
                             rightMargin: gUtill.dpW2(13 * approvalDetailPage.scale)
                         }
 
-                        text: getStatusString(approvalManager.detailStatus)
+                        text: getStatusString(currentApproval.approvalStatus)
                         font.family: 'PingFangSC-Regular'
                         font.pixelSize: gUtill.dpH2(12.5 * approvalDetailPage.scale)
-                        color: getStatusStringColor(approvalManager.detailStatus)
+                        color: getStatusStringColor(currentApproval.approvalStatus)
                         verticalAlignment: Qt.AlignVCenter
                     }
 
@@ -241,7 +228,7 @@ CPage{
                         sourceSize.width: gUtill.dpW2(20 * approvalDetailPage.scale)
                         sourceSize.height: gUtill.dpH2(20 * approvalDetailPage.scale)
 
-                        source: getStatusFlagIcon(approvalManager.detailStatus)
+                        source: getStatusFlagIcon(currentApproval.approvalStatus)
                         fillMode: Image.PreserveAspectFit
                     }
 
@@ -319,8 +306,8 @@ CPage{
                         flickableInteractive: contentHeight > height
 
                         function parseContent() {
-                            if (approvalManager.detailType === 8) {
-                                var json = JSON.parse(approvalManager.detailContent)
+                            if (currentApproval.approvalType === 8) {
+                                var json = JSON.parse(currentApproval.content)
                                 var content = '出差地点：' + json.pos_change_to
                                 content += '，开始时间：' + json.begin_date
                                 content += '，结束时间：' + json.end_date
@@ -329,7 +316,7 @@ CPage{
                                 return content
                             }
                             else {
-                                return approvalManager.detailContent
+                                return currentApproval.content
                             }
                         }
                     }
@@ -402,12 +389,12 @@ CPage{
                     width: parent.width
                     height: gUtill.dpH2(count * 49 * approvalDetailPage.scale)
                     anchors.top: approvalAttachmentHeader.bottom
-                    model: approvalManager.approvalAttachmentModel
-                    delegate: fillItemDelegate
+                    model: approvalAttachmentModel
+                    delegate: fileItemDelegate
                     clip: true
                     interactive: false
 
-                    visible: approvalManager.detailType === 7 && count > 0
+                    visible: currentApproval.approvalType === 7 && count > 0
                 }
 
                 ListView {
@@ -418,7 +405,7 @@ CPage{
                                      approvalAttachmentList.bottom :
                                      approvalContentArea.bottom
                     anchors.topMargin: gUtill.dpH2(10 * approvalDetailPage.scale)
-                    model: approvalManager.approvalStatusModel
+                    model: approvalStatusModel
                     delegate: statusItemDelegate
                     clip: true
                     interactive: false
@@ -444,9 +431,9 @@ CPage{
                     Repeater {
                         property var listGeneral: ['驳回', '同意', '转批']
                         property var listDoc: ['驳回', '同意']
-                        model: approvalManager.detailType === 7 ? listDoc : listGeneral
+                        model: currentApproval.approvalType === 7 ? listDoc : listGeneral
                         Rectangle {
-                            width: approvalManager.detailType === 7 ? buttonArea.width / 2
+                            width: currentApproval.approvalType === 7 ? buttonArea.width / 2
                                                                     : buttonArea.width / 3
                             height: buttonArea.height
                             color: 'white'
@@ -471,17 +458,28 @@ CPage{
                                     if (modelData == '驳回') {
                                         pageStack.push(
                                             Qt.resolvedUrl('CDoodApprovalRejectPage.qml'),
-                                            {undeterminedApprovalPageId:parentId})
+                                            {undeterminedApprovalPageId: parentId,
+                                                approvalID: currentApproval.approvalID})
                                     }
                                     else if (modelData == '同意') {
                                         pageStack.push(
                                             Qt.resolvedUrl('CDoodApprovalPassPage.qml'),
-                                            {undeterminedApprovalPageId:parentId})
+                                            {undeterminedApprovalPageId: parentId,
+                                                approvalID: currentApproval.approvalID})
                                     }
                                     else if (modelData == '转批') {
-                                        pageStack.push(
+                                        var component = pageStack.push(
                                             Qt.resolvedUrl('CDoodApprovalTranspondPage.qml'),
-                                            {undeterminedApprovalPageId:parentId})
+                                            {undeterminedApprovalPageId: parentId,
+                                                approvalID: currentApproval.approvalID})
+
+                                        component.callback.connect(function(ret){
+                                            var obj = JSON.parse(ret)
+                                            if (obj.code === 1){
+                                                currentApproval = obj;
+                                                buttonVisible = false
+                                            }
+                                        });
                                     }
                                 }
                             }
@@ -493,16 +491,16 @@ CPage{
     }
 
     Component {
-        id: fillItemDelegate
+        id: fileItemDelegate
 
         Rectangle {
-            id: fillItemBackground
+            id: fileItemBackground
             width: parent.width
             height: gUtill.dpH2(49 * approvalDetailPage.scale)
             color: 'white'
 
             Image {
-                id: fillFormatIcon
+                id: fileFormatIcon
 
                 width: gUtill.dpW2(20 * approvalDetailPage.scale)
                 height: gUtill.dpH2(20 * approvalDetailPage.scale)
@@ -512,23 +510,23 @@ CPage{
                 sourceSize.width: gUtill.dpW2(20 * approvalDetailPage.scale)
                 sourceSize.height: gUtill.dpH2(20 * approvalDetailPage.scale)
 
-                source: getFillFormatIcon(model.modelData.type)
+                source: getFileFormatIcon(fileType)
                 fillMode: Image.PreserveAspectFit
             }
 
             Text {
-                id: fillnameText
+                id: filenameText
 
                 height: gUtill.dpH2(25 * approvalDetailPage.scale)
                 anchors {
-                    left: fillFormatIcon.right
+                    left: fileFormatIcon.right
                     leftMargin: gUtill.dpW2(8 * approvalDetailPage.scale)
                     right: parent.right
                     rightMargin: gUtill.dpW2(18 * approvalDetailPage.scale)
                     verticalCenter: parent.verticalCenter
                 }
 
-                text: model.modelData.name
+                text: fileName
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(18 * approvalDetailPage.scale)
                 color: '#545454'
@@ -543,12 +541,11 @@ CPage{
             }
 
             MouseArea {
-                id: fillArea
+                id: fileArea
                 anchors.fill: parent
                 onClicked: {
-                    approvalManager.setFileDetailInfo(model.modelData.id)
-                    pageStack.push(Qt.resolvedUrl('CDoodDocumentDetailPage.qml'))
-                    //approvalManager.checkPermisson(model.modelData.path, userProfileManager.id)
+                    pageStack.push(Qt.resolvedUrl('CDoodDocumentDetailPage.qml'),
+                                   {currentDoc: approvalAttachmentModel.get(index)})
                 }
             }
         }
@@ -587,7 +584,7 @@ CPage{
                     right: approvalStatusFlagIcon.left
                 }
 
-                text: model.modelData.createUserName
+                text: userName
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(18 * approvalDetailPage.scale)
                 color: '#545454'
@@ -605,7 +602,7 @@ CPage{
                     right: approvalTimeText.right
                 }
 
-                text: getStatusString(model.modelData.status, model.modelData.opinion)
+                text: getStatusString(status, opinion)
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(12.5 * approvalDetailPage.scale)
                 color: '#999999'
@@ -625,7 +622,7 @@ CPage{
                     rightMargin: gUtill.dpW2(13 * approvalDetailPage.scale)
                 }
 
-                text: model.modelData.time
+                text: time
                 font.family: 'PingFangSC-Regular'
                 font.pixelSize: gUtill.dpH2(10 * approvalDetailPage.scale)
                 color: '#999999'
@@ -643,7 +640,7 @@ CPage{
                 sourceSize.width: gUtill.dpW2(20 * approvalDetailPage.scale)
                 sourceSize.height: gUtill.dpH2(20 * approvalDetailPage.scale)
 
-                source: getStatusFlagBottomIcon(model.modelData.status)
+                source: getStatusFlagBottomIcon(status)
                 fillMode: Image.PreserveAspectFit
             }
 
@@ -662,9 +659,9 @@ CPage{
             MouseArea {
                 id: statuItemArea
                 anchors.fill: parent
-                enabled: model.modelData.opinion.length > 0
+                enabled: opinion.length > 0
                 onClicked: {
-                    contentDlg.content = model.modelData.opinion
+                    contentDlg.content = opinion
                     contentDlg.show()
                 }
             }
@@ -705,6 +702,59 @@ CPage{
         titleText: "警告"
         messageText: "文件<font color=\"#0076FF\">“" + filename+ "”</font>与您的访问权限不符，已拒绝您的访问请求！"
         alertButtonText: "<font color=\"#0076FF\">确定</font>"
+    }
+
+    ListModel {
+        id: approvalAttachmentModel
+        ListElement {
+            fileName: ''
+            fileType: ''
+        }
+    }
+
+    ListModel {
+        id: approvalStatusModel
+        ListElement {
+            userName: ''
+            time: ''
+            status: 0
+            opinion: ''
+        }
+    }
+
+    function loadData() {
+        console.log('currentApproval: '
+                    + JSON.stringify(currentApproval))
+
+        var arr = JSON.parse(currentApproval.attachmentsList);
+        for (var i = 0; i < arr.length; i++) {
+            console.log('approvalAttachmentModel: '
+                        + JSON.stringify(arr[i]))
+            var item = {};
+            item.fileName = arr[i].attachmentName
+            item.fileType = item.fileName.substring(item.fileName.lastIndexOf('.'))
+            item.filePath = arr[i].attachmentPath
+            item.pageSize = arr[i].attachmentPageSize
+            approvalAttachmentModel.append(item)
+        }
+
+        arr = JSON.parse(currentApproval.statusList);
+        for (var i = 0; i < arr.length; i++) {
+            console.log('approvalStatusModel: '
+                        + JSON.stringify(arr[i]))
+            var item = {};
+            item.userName = arr[i].eventApprovalUsersInfo[0].userName
+            var time = arr[i].approvalTime
+            if (time === 0) {
+                item.time = '现在'
+            }
+            else {
+                item.time = Qt.formatDateTime(new Date(), 'MM/dd  hh:mm:ss')
+            }
+            item.status = arr[i].approvalStatus
+            item.opinion = arr[i].approvalOpinion
+            approvalStatusModel.append(item)
+        }
     }
 
     function getStatusString(type, opinion) {
@@ -755,48 +805,48 @@ CPage{
         }
     }
 
-    function getFillFormatIcon(type) {
+    function getFileFormatIcon(type) {
         if(type === '.doc'){
-            return "qrc:/res/newUi/approval/ic_cloud_doc.png";
+            return "qrc:/res/approval/ic_cloud_doc.png";
         }
         else if(type === '.exe') {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png";
+            return "qrc:/res/approval/ic_cloud_exe.png";
         }
         else if(type === '.pdf') {
-            return "qrc:/res/newUi/approval/ic_cloud_pdf.png";
+            return "qrc:/res/approval/ic_cloud_pdf.png";
         }
         else {
-            return "qrc:/res/newUi/approval/ic_cloud_exe.png";
+            return "qrc:/res/approval/ic_cloud_exe.png";
         }
     }
 
     function getStatusFlagIcon(type) {
         if(type === -1){
-            return "qrc:/res/newUi/approval/up Corner_reject.png";
+            return "qrc:/res/approval/up Corner_reject.png";
         }
         else if(type === 2) {
-            return "qrc:/res/newUi/approval/up Corner_pass.png";
+            return "qrc:/res/approval/up Corner_pass.png";
         }
         else {
-            return "qrc:/res/newUi/approval/up Corner_unaudited.png";
+            return "qrc:/res/approval/up Corner_unaudited.png";
         }
     }
 
     function getStatusFlagBottomIcon(type) {
         if(type === -1){
-            return "qrc:/res/newUi/approval/down Corner_Reject.png";
+            return "qrc:/res/approval/down Corner_Reject.png";
         }
         else if(type === 0) {
-            return "qrc:/res/newUi/approval/down Corner_applicant.png";
+            return "qrc:/res/approval/down Corner_applicant.png";
         }
         else if(type === 1){
-            return "qrc:/res/newUi/approval/down Corner_unaudited.png";
+            return "qrc:/res/approval/down Corner_unaudited.png";
         }
         else if(type === 2){
-            return "qrc:/res/newUi/approval/down Corner_pass.png";
+            return "qrc:/res/approval/down Corner_pass.png";
         }
         else if(type === 3){
-            return "qrc:/res/newUi/approval/down Corner_unaudited.png";
+            return "qrc:/res/approval/down Corner_unaudited.png";
         }
         else {
             return ""
