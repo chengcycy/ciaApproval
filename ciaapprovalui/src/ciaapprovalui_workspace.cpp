@@ -30,7 +30,7 @@ ciaapprovalui_Workspace::ciaapprovalui_Workspace()
         path.mkdir(APP_SAVE_DATA_PATH);
     }
     //log
-    //    qInstallMessageHandler(outputMessage);
+    qInstallMessageHandler(outputMessage);
 
     bool insatllLinkDood = false;
     CSystemPackageManager pkg;

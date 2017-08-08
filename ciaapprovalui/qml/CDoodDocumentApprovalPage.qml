@@ -191,6 +191,7 @@ CPage{
                         var component = pageStack.push(Qt.resolvedUrl('CDoodApprovalDocumentListPage.qml'),
                                        {selectedUserID: selectedUserID});
                         component.callback.connect(function(ret) {
+                            documentListModel.clear()
                             for (var i = 0; i < ret.length; i++) {
                                 documentListModel.append(ret[i])
                             }

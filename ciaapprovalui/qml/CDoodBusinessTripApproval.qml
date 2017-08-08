@@ -440,9 +440,9 @@ CPage{
                         content.pos_change_to = siteInputTextArea.text
                         content.outReaSon = businessTripReasonContentTextArea.text
                         var createUser = {}
-                        createUser.userID = selectedUserID
-                        createUser.userName = selectedName
-                        createUser.userPhotoUrl = selectedPortrait
+                        createUser.userID = mainApp.currentID
+                        createUser.userName = mainApp.currentName
+                        createUser.userPhotoUrl = ''
                         var approver = {}
                         approver.userID = selectedUserID
                         approver.userName = selectedName

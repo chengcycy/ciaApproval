@@ -13,10 +13,10 @@ function getContactsJSONFile(callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('getContactsJSONFile response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
-            console.log(httpRequest.responseText);
         }
     }
     httpRequest.onerror = function() {
@@ -42,10 +42,10 @@ function getJSONFile(callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('getJSONFile response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
-            console.log(httpRequest.responseText);
         }
     }
     httpRequest.onerror = function() {
@@ -72,10 +72,10 @@ function addNewApprovalEvent(type, createUser, approver, content, attachment, ca
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         }
         else if (httpRequest.readyState === XMLHttpRequest.DONE) {
+            console.log('addNewApprovalEvent response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
-            console.log(httpRequest.responseText);
         }
     }
     httpRequest.onerror = function() {
@@ -106,7 +106,7 @@ function selectNeedApprovalEvent(userID, status, callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('selectNeedApprovalEvent response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText, status)
             }
@@ -137,7 +137,7 @@ function selectMeCreateApprovalEvent(userID, status, callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('selectMeCreateApprovalEvent response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText, status)
             }
@@ -168,7 +168,7 @@ function showHasApprovalDetial(eventID, callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('showHasApprovalDetial response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
@@ -198,7 +198,7 @@ function secFileGetList(userID, approverID, callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('secFileGetList response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
@@ -230,7 +230,7 @@ function updateApprovalEventStatus(eventID, approvalID, approvalUserID, approval
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('updateApprovalEventStatus response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }
@@ -266,7 +266,7 @@ function userOutAuth(userID, callback) {
             console.log("Last modified -->");
             console.log(httpRequest.getResponseHeader ("Last-Modified"));
         } else if (httpRequest.readyState === XMLHttpRequest.DONE) {
-            console.log('response:' + httpRequest.responseText);
+            console.log('userOutAuth response:' + httpRequest.responseText);
             if (callback) {
                 callback(httpRequest.responseText)
             }

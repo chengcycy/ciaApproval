@@ -19,14 +19,15 @@ CPage{
 
         documentsListModel.clear()
         ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
-            function onGetFileList(ret) {
-                var obj = JSON.parse(ret)
-                for (var i = 0; i < ret.length; i++) {
-                    obj.fileGUID = ret[i].fileGUID
-                    obj.fileName = ret[i].fileName
-                    obj.filePage = ret[i].filePage
-                    obj.fileOverTime = ret[i].fileOverTime
-                    obj.fileType = ret[i].fileType
+            function(ret) {
+                var arr = JSON.parse(ret)
+                for (var i = 0; i < arr.length; i++) {
+                    var obj = {}
+                    obj.fileGUID = arr[i].fileGUID
+                    obj.fileName = arr[i].fileName
+                    obj.filePage = arr[i].filePage
+                    obj.fileOverTime = arr[i].fileOverTime
+                    obj.fileType = arr[i].fileType
                     obj.isSelected = false
                     documentsListModel.append(obj)
                 }
@@ -125,7 +126,7 @@ CPage{
                         anchors.fill: parent
                         onClicked: {
                             ApprovalRequest.secFileGetList(mainApp.currentID, selectedUserID,
-                                function onGetFileList(ret) {
+                                function(ret) {
                                     var arr = []
                                     var cbret = JSON.parse(ret)
                                     for (var i = 0; i < documentsListModel.count; i++) {
@@ -134,7 +135,7 @@ CPage{
                                         }
 
                                         var flag = false;
-                                        for (var j = 0; j < arr.length; j++) {
+                                        for (var j = 0; j < cbret.length; j++) {
                                             if(documentsListModel.get(i).fileGUID === cbret[j].fileGUID) {
                                                 flag = true;
                                             }
@@ -323,7 +324,7 @@ CPage{
             fileGUID: '1'
             fileName: 'LD会议纪要－0930.doc'
             filePage: 1
-            fileOverTime: 1
+            fileOverTime: '1'
             fileType: '.doc'
             isSelected: false
         }

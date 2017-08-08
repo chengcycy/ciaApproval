@@ -362,16 +362,16 @@ CPage{
                             anchors.fill: parent
                             onClicked: {
                                 if (name === '公文审批') {
-                                    pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
-//                                    if (!isCheckingAuth) {
-//                                        isCheckingAuth = true;
-//                                        ApprovalRequest.userOutAuth(mainApp.currentID,
-//                                                                    onAuthResult);
-//                                    }
-//                                    else {
-//                                        alertDlg.messageText = "正在检查权限，请等待验证结果"
-//                                        alertDlg.show();
-//                                    }
+                                    //pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
+                                    if (!isCheckingAuth) {
+                                        isCheckingAuth = true;
+                                        ApprovalRequest.userOutAuth(mainApp.currentID,
+                                                                    onAuthResult);
+                                    }
+                                    else {
+                                        alertDlg.messageText = "正在检查权限，请等待验证结果"
+                                        alertDlg.show();
+                                    }
                                     return;
                                 }
                                 else if (name === '出差') {
@@ -461,15 +461,15 @@ CPage{
             return;
         }
 
-        if (obj.code === 200 && obj.trust_level === 0) {
+        if (obj.code === '200' && obj.trust_level === '0') {
             pageStack.push(Qt.resolvedUrl('CDoodDocumentApprovalPage.qml'));
         }
         else {
-            if (obj.code !== 200) {
+            if (obj.code !== '200') {
                 alertDlg.messageText = "通信失败，请检查网络";
             }
             else {
-                alertDlg.messageText = "您目前无权在移动端使用公文审批服务";
+                obj.reason_desc = "您目前无权在移动端使用公文审批服务";
             }
             alertDlg.show();
         }
